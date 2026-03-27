@@ -19,9 +19,23 @@
 :root{--bg:#0d0d0d;--surface:#161616;--card:#1c1c1c;--border:#2a2a2a;--border2:#333;--accent:#e8ff4a;--accent2:#4affb4;--dim:rgba(232,255,74,.10);--text:#f5f5f5;--text2:#888;--text3:#444;--danger:#ff4a6b;--success:#4affb4;--fh:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--fb:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--rad:14px;--rads:8px;}
 [data-theme="t0"]{--bg:#0d0d0d;--surface:#161616;--card:#1c1c1c;--border:#2a2a2a;--border2:#333;--accent:#e8ff4a;--accent2:#4affb4;--dim:rgba(232,255,74,.10);--text:#f5f5f5;--text2:#888;--text3:#444;--danger:#ff4a6b;--success:#4affb4;--fh:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--fb:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--rad:14px;--rads:8px;}
 [data-theme="t1"]{--bg:#020408;--surface:#060d10;--card:#081218;--border:#0d2a1e;--border2:#0a3d2a;--accent:#00ff88;--accent2:#00ccff;--dim:rgba(0,255,136,.08);--text:#c8ffe8;--text2:#2a6b4a;--text3:#164d30;--danger:#ff2244;--success:#00ff88;--fh:'Courier New',Courier,monospace;--fb:'Courier New',Courier,monospace;--rad:3px;--rads:2px;}
-[data-theme="t2"]{--bg:#0a0a0a;--surface:#111;--card:#141414;--border:#1e1a10;--border2:#2e2510;--accent:#d4a017;--accent2:#8b1a1a;--dim:rgba(212,160,23,.08);--text:#e8e0cc;--text2:#7a6a40;--text3:#3d3520;--danger:#8b0000;--success:#d4a017;--fh:Georgia,'Times New Roman',serif;--fb:Georgia,'Times New Roman',serif;--rad:2px;--rads:1px;}
+[data-theme="t2"]{--bg:#0c0900;--surface:#130f00;--card:#1a1400;--border:#2e2200;--border2:#3d2e00;--accent:#c8a800;--accent2:#8b0000;--dim:rgba(200,168,0,.10);--text:#f0e6c8;--text2:#8a7040;--text3:#4a3a10;--danger:#cc0000;--success:#c8a800;--fh:Georgia,'Times New Roman',serif;--fb:Georgia,'Times New Roman',serif;--rad:0px;--rads:0px;}
 [data-theme="t3"]{--bg:#0e0010;--surface:#180020;--card:#1e0028;--border:#3d0050;--border2:#5a0070;--accent:#ff2d78;--accent2:#ff9a00;--dim:rgba(255,45,120,.10);--text:#ffe8f5;--text2:#b060a0;--text3:#703060;--danger:#ff2d78;--success:#ff9a00;--fh:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--fb:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--rad:0px;--rads:0px;}
 
+/* Death Note especial */
+[data-theme="t2"] #app{background-image:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(200,168,0,.04) 28px,rgba(200,168,0,.04) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(200,168,0,.03) 28px,rgba(200,168,0,.03) 29px);}
+[data-theme="t2"] .card{background:linear-gradient(135deg,#1a1400 0%,#120e00 100%);border-color:#2e2200;}
+[data-theme="t2"] .card::after{content:'';position:absolute;top:0;right:0;width:30px;height:30px;background:linear-gradient(225deg,#2e2200 50%,transparent 50%);}
+[data-theme="t2"] .hoy-card{background:linear-gradient(160deg,#1a1400,#0c0900);}
+[data-theme="t2"] .hoy-dia{color:#c8a800;text-shadow:0 0 30px rgba(200,168,0,.3);}
+[data-theme="t2"] .tipo-badge{border-color:#c8a800;font-style:italic;}
+[data-theme="t2"] .logo{letter-spacing:3px;font-style:italic;text-shadow:0 0 15px rgba(200,168,0,.4);}
+[data-theme="t2"] .ej-nombre{font-style:italic;}
+[data-theme="t2"] .stat-val{text-shadow:0 0 10px rgba(200,168,0,.3);}
+[data-theme="t2"] nav{background:#0c0900;border-top-color:#2e2200;}
+[data-theme="t2"] header{background:rgba(12,9,0,.95);}
+[data-theme="t2"] .sec-ttl{font-style:italic;text-shadow:0 0 20px rgba(200,168,0,.25);}
+[data-theme="t2"] .card-lbl{color:#c8a800;font-style:italic;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 
 /* el truco principal: html y body tienen el color de fondo siempre */
@@ -203,11 +217,11 @@ nav button svg{width:22px;height:22px;}
 .p0::after{content:'';position:absolute;bottom:8px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e8ff4a,transparent);}
 .p1{background:linear-gradient(135deg,#081218,#020408);border:1px solid #0d2a1e;}
 .p1::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,136,.05) 3px,rgba(0,255,136,.05) 4px);}
-.p2{background:linear-gradient(135deg,#141414,#0a0a0a);border:1px solid #1e1a10;}
+.p2{background:linear-gradient(135deg,#1a1400,#0c0900);border:1px solid #2e2200;background-image:repeating-linear-gradient(0deg,transparent,transparent 6px,rgba(200,168,0,.06) 6px,rgba(200,168,0,.06) 7px);}
 .p3{background:linear-gradient(135deg,#1e0028,#0e0010);border:1px solid #3d0050;}
 .pt0{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.65rem;color:#e8ff4a;letter-spacing:1px;}
 .pt1{font-family:'Courier New',monospace;font-size:.65rem;color:#00ff88;}
-.pt2{font-family:Georgia,serif;font-size:.72rem;color:#d4a017;letter-spacing:2px;}
+.pt2{font-family:Georgia,serif;font-size:.72rem;color:#c8a800;letter-spacing:2px;font-style:italic;text-shadow:0 0 8px rgba(200,168,0,.5);}
 .pt3{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.95rem;color:#ff2d78;letter-spacing:2px;}
 .tema-nombre{font-family:var(--fh);font-size:.9rem;font-weight:600;color:var(--text);}
 .tema-sub{font-size:.73rem;color:var(--text3);margin-top:3px;}
@@ -300,19 +314,14 @@ nav button svg{width:22px;height:22px;}
     <div class="section" id="sec-cuerpo">
       <div class="sec-hdr"><div class="sec-lbl">Body metrics</div><div class="sec-ttl">Mi cuerpo</div></div>
       <div class="stats-grid">
-        <div class="stat-box"><div class="stat-val" id="stP">55</div><div class="stat-lbl">Peso kg</div><div class="stat-diff" id="stD"></div></div>
-        <div class="stat-box"><div class="stat-val">174</div><div class="stat-lbl">Altura cm</div></div>
-        <div class="stat-box"><div class="stat-val" id="stI">18.2</div><div class="stat-lbl">IMC</div></div>
+        <div class="stat-box"><div class="stat-val" id="stP">58</div><div class="stat-lbl">Peso kg</div><div class="stat-diff" id="stD"></div></div>
+        <div class="stat-box"><div class="stat-val" id="stA">174</div><div class="stat-lbl">Altura cm</div></div>
+        <div class="stat-box"><div class="stat-val" id="stI">19.2</div><div class="stat-lbl">IMC</div></div>
         <div class="stat-box"><div class="stat-val" id="stS">1</div><div class="stat-lbl">Semana</div></div>
       </div>
-      <div class="card">
-        <div class="card-lbl">Registrar peso</div>
-        <div style="display:flex;gap:10px;margin-bottom:12px">
-          <input type="number" id="inPesoDirecto" placeholder="55.0" step="0.1" min="30" max="200" inputmode="decimal"
-            style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:var(--rads);color:var(--text);font-family:var(--fb);font-size:1.2rem;padding:12px 14px;outline:none;-webkit-appearance:none;text-align:center;font-weight:700;">
-          <button onclick="savePesoDirecto()" style="background:var(--accent);color:#000;border:none;border-radius:var(--rads);padding:12px 20px;font-size:.95rem;font-weight:700;cursor:pointer;touch-action:manipulation;white-space:nowrap;">Guardar</button>
-        </div>
-        <div style="font-size:.8rem;color:var(--text3);">Registrá tu peso una vez por semana para ver tu progreso.</div>
+      <div class="card" id="cardPesoReg">
+        <div class="card-lbl" id="pesoRegLbl">Registrar peso</div>
+        <div id="pesoRegContent"></div>
       </div>
       <div class="card"><div class="card-lbl">Evolución de peso</div><div id="pesoList"></div></div>
     </div>
@@ -484,13 +493,22 @@ function applyTema(t){
 
 // ═══ MODAL PESO ═══
 function checkPesoSemanal(){
-  // Solo mostrar si ya hay al menos 1 registro previo y pasaron 7+ días
-  // Primera vez: el usuario va a "Cuerpo" y lo registra ahí
   if(!S.ultimoPeso) return;
+  // Solo si ya hay registros previos
+  if(!S.pesos||S.pesos.length===0) return;
   const hoy=new Date(), ult=new Date(S.ultimoPeso+'T00:00:00');
   const dias=Math.floor((hoy-ult)/(1000*60*60*24));
   if(dias>=7){
-    setTimeout(()=>abrirModalPeso('Pasaron '+dias+' días. ¿Cuánto pesás hoy?'),800);
+    // Esperar 3 segundos para que la app cargue completamente primero
+    setTimeout(()=>{
+      // Verificar que la app ya esté visible (splash oculto)
+      if(document.getElementById('splash').classList.contains('hide')){
+        abrirModalPeso('Pasaron '+dias+' días. ¿Cuánto pesás hoy?');
+      } else {
+        // Si el splash sigue, esperar a que termine
+        setTimeout(()=>abrirModalPeso('Pasaron '+dias+' días. ¿Cuánto pesás hoy?'),2000);
+      }
+    },3000);
   }
 }
 function abrirModalPeso(msg){
@@ -498,9 +516,42 @@ function abrirModalPeso(msg){
   document.getElementById('modalPeso').classList.add('open');
   document.body.style.overflow='hidden';
 }
+function puedeRegistrarPeso(){
+  if(!S.ultimoPeso) return true;
+  const hoy=new Date(), ult=new Date(S.ultimoPeso+'T00:00:00');
+  return Math.floor((hoy-ult)/(1000*60*60*24))>=7;
+}
+function diasParaProximoPeso(){
+  if(!S.ultimoPeso) return 0;
+  const hoy=new Date(), ult=new Date(S.ultimoPeso+'T00:00:00');
+  return Math.max(0, 7-Math.floor((hoy-ult)/(1000*60*60*24)));
+}
+function renderPesoReg(){
+  const cont=document.getElementById('pesoRegContent');
+  const lbl=document.getElementById('pesoRegLbl');
+  if(!cont||!lbl)return;
+  if(puedeRegistrarPeso()){
+    lbl.textContent='Registrar peso esta semana';
+    cont.innerHTML=\`<div style="display:flex;gap:10px;margin-bottom:12px">
+      <input type="number" id="inPesoDirecto" placeholder="58.0" step="0.1" min="30" max="200" inputmode="decimal"
+        style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:var(--rads);color:var(--text);font-family:var(--fb);font-size:1.2rem;padding:12px 14px;outline:none;-webkit-appearance:none;text-align:center;font-weight:700;">
+      <button onclick="savePesoDirecto()" style="background:var(--accent);color:#000;border:none;border-radius:var(--rads);padding:12px 20px;font-size:.95rem;font-weight:700;cursor:pointer;touch-action:manipulation;white-space:nowrap;">Guardar</button>
+    </div>
+    <div style="font-size:.8rem;color:var(--text3);">Registrá tu peso una vez por semana.</div>\`;
+  } else {
+    const dias=diasParaProximoPeso();
+    lbl.textContent='Peso registrado ✓';
+    const last=S.pesos[S.pesos.length-1];
+    cont.innerHTML=\`<div style="display:flex;align-items:center;gap:14px;padding:8px 0">
+      <div style="font-family:var(--fh);font-size:2rem;font-weight:700;color:var(--accent)">\${last?last.kg:'—'} kg</div>
+      <div style="font-size:.85rem;color:var(--text3)">Próximo registro<br>en <strong style="color:var(--text2)">\${dias} día\${dias!==1?'s':''}</strong></div>
+    </div>\`;
+  }
+}
 function savePesoDirecto(){
+  if(!puedeRegistrarPeso()){alert('Ya registraste el peso esta semana. Podés hacerlo de nuevo en '+diasParaProximoPeso()+' días.');return;}
   const v=parseFloat(document.getElementById('inPesoDirecto').value);
-  if(!v||v<30||v>200){alert('Ingresá un peso válido (ej: 55.5)');return;}
+  if(!v||v<30||v>200){alert('Ingresá un peso válido (ej: 58.0)');return;}
   const f=ds(new Date());
   S.pesos.push({f,kg:v,s:S.sem});
   S.ultimoPeso=f;
@@ -598,7 +649,7 @@ function renderCuerpo(){
   const pa=last?last.kg:55;
   document.getElementById('stP').textContent=pa;
   document.getElementById('stS').textContent=S.sem;
-  document.getElementById('stI').textContent=(pa/(1.74*1.74)).toFixed(1);
+  document.getElementById('stI').textContent=(pa/(1.74*1.74)).toFixed(1); document.getElementById('stA').textContent=174;
   const de=document.getElementById('stD');
   if(last&&prev){
     const d=(last.kg-prev.kg).toFixed(1);
@@ -607,6 +658,7 @@ function renderCuerpo(){
     else{de.textContent='= Sin cambio';de.className='stat-diff eq';}
   }else de.textContent='';
   const h=document.getElementById('pesoList');
+  renderPesoReg();
   if(!p.length){h.innerHTML=`<div class="empty"><div class="ei">📏</div><div>Aún no hay registros de peso</div></div>`;return;}
   h.innerHTML=[...p].reverse().slice(0,16).map((x,i,arr)=>{
     const ant=arr[i+1];
@@ -707,7 +759,16 @@ function checkSemana(){
 
 // ═══ INIT ═══
 load();
-if(!S.fi){S.fi=ds(new Date());save();}
+if(!S.fi){
+  S.fi=ds(new Date());
+  // Peso inicial
+  if(S.pesos.length===0){
+    const hoy=ds(new Date());
+    S.pesos.push({f:hoy,kg:58,s:1});
+    S.ultimoPeso=hoy;
+  }
+  save();
+}
 S.semV=S.sem;
 
 // aplicar colores base al html/body según tema guardado
