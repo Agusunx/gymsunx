@@ -15,19 +15,19 @@
 <title>GymSunx</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&family=Cinzel:wght@400;700&family=IM+Fell+English&family=Bebas+Neue&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ==== TEMAS ==== */
+/* ===== TEMAS ===== */
 [data-theme="t0"]{--bg:#0d0d0d;--surface:#161616;--card:#1c1c1c;--border:#2a2a2a;--border2:#333;--accent:#e8ff4a;--accent2:#4affb4;--dim:rgba(232,255,74,.10);--text:#f5f5f5;--text2:#888;--text3:#444;--danger:#ff4a6b;--success:#4affb4;--fh:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--rad:14px;--rads:8px;}
 [data-theme="t1"]{--bg:#020408;--surface:#060d10;--card:#081218;--border:#0d2a1e;--border2:#0a3d2a;--accent:#00ff88;--accent2:#00ccff;--dim:rgba(0,255,136,.08);--text:#c8ffe8;--text2:#2a6b4a;--text3:#164d30;--danger:#ff2244;--success:#00ff88;--fh:'Share Tech Mono',monospace;--fb:'Rajdhani',sans-serif;--rad:3px;--rads:2px;}
-[data-theme="t2"]{--bg:#0a0a0a;--surface:#111;--card:#141414;--border:#1e1a10;--border2:#2e2510;--accent:#d4a017;--accent2:#8b0000;--dim:rgba(212,160,23,.08);--text:#e8e0cc;--text2:#7a6a40;--text3:#3d3520;--danger:#8b0000;--success:#d4a017;--fh:'Cinzel',serif;--fb:'IM Fell English',serif;--rad:2px;--rads:1px;}
+[data-theme="t2"]{--bg:#0a0a0a;--surface:#111;--card:#141414;--border:#1e1a10;--border2:#2e2510;--accent:#d4a017;--accent2:#8b1a1a;--dim:rgba(212,160,23,.08);--text:#e8e0cc;--text2:#7a6a40;--text3:#3d3520;--danger:#8b0000;--success:#d4a017;--fh:'Cinzel',serif;--fb:'IM Fell English',serif;--rad:2px;--rads:1px;}
 [data-theme="t3"]{--bg:#0e0010;--surface:#180020;--card:#1e0028;--border:#3d0050;--border2:#5a0070;--accent:#ff2d78;--accent2:#ff9a00;--dim:rgba(255,45,120,.10);--text:#ffe8f5;--text2:#b060a0;--text3:#703060;--danger:#ff2d78;--success:#ff9a00;--fh:'Bebas Neue',cursive;--fb:'Barlow',sans-serif;--rad:0px;--rads:0px;}
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{background:var(--bg);}
-html{height:100%;}
-body{color:var(--text);font-family:var(--fb);font-size:17px;line-height:1.4;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom,0px);transition:background .3s,color .3s;}
 
-/* scanlines hacker */
-[data-theme="t1"] #app::before{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,136,.015) 3px,rgba(0,255,136,.015) 4px);}
+/* el truco principal: html y body tienen el color de fondo siempre */
+html{height:100%;background:#0d0d0d;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:17px;line-height:1.4;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+
+[data-theme="t1"] #app::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,136,.013) 3px,rgba(0,255,136,.013) 4px);}
 
 /* SPLASH */
 #splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity .4s;}
@@ -42,10 +42,17 @@ body{color:var(--text);font-family:var(--fb);font-size:17px;line-height:1.4;min-
 .spl-fill{height:100%;background:var(--accent);width:0;animation:loadbar .9s cubic-bezier(.4,0,.2,1) forwards;}
 @keyframes loadbar{to{width:100%;}}
 
-/* APP wrapper — clave anti-franja-negra */
-#app{display:flex;flex-direction:column;min-height:100vh;min-height:-webkit-fill-available;background:var(--bg);position:relative;transition:background .3s;}
-/* pseudo-elemento que tapa cualquier gap debajo del nav */
-#app::after{content:'';position:fixed;bottom:0;left:0;right:0;height:calc(env(safe-area-inset-bottom,0px) + 2px);background:var(--bg);z-index:199;pointer-events:none;}
+/* APP — el fondo se extiende por toda la pantalla incluyendo gesture bar */
+#app{
+  display:flex;flex-direction:column;
+  min-height:100vh;min-height:-webkit-fill-available;
+  background:var(--bg);
+  position:relative;
+  transition:background .3s;
+  /* pinta hacia abajo indefinidamente */
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  box-sizing:border-box;
+}
 
 /* HEADER */
 header{position:sticky;top:0;z-index:200;background:var(--bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 20px;padding-top:calc(env(safe-area-inset-top,0px) + 14px);transition:background .3s,border-color .3s;}
@@ -61,12 +68,21 @@ header{position:sticky;top:0;z-index:200;background:var(--bg);backdrop-filter:bl
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 
 /* MAIN */
-main{flex:1;padding:18px 18px 0;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px) + 18px);max-width:480px;margin:0 auto;width:100%;}
+main{flex:1;padding:18px 18px 0;padding-bottom:calc(68px + env(safe-area-inset-bottom,0px) + 18px);max-width:480px;margin:0 auto;width:100%;}
 
-/* NAV */
-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--bg);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);transition:background .3s,border-color .3s;}
-nav::after{content:'';position:absolute;top:100%;left:0;right:0;height:200px;background:var(--bg);pointer-events:none;}
-nav button{background:none;border:none;color:var(--text3);padding:11px 0 13px;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--fb);font-size:.63rem;font-weight:500;cursor:pointer;transition:color .15s;touch-action:manipulation;text-transform:uppercase;letter-spacing:.4px;}
+/* NAV — fijo en el fondo, sin gap blanco */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--bg);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  /* el padding cubre la gesture bar */
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  transition:background .3s,border-color .3s;
+  /* extiende el fondo del nav hacia abajo sin límite */
+  box-shadow:0 100px 0 100px var(--bg);
+}
+nav button{background:none;border:none;color:var(--text3);padding:11px 0 12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--fb);font-size:.63rem;font-weight:500;cursor:pointer;transition:color .15s;touch-action:manipulation;text-transform:uppercase;letter-spacing:.4px;}
 [data-theme="t1"] nav button{font-family:var(--fh);font-size:.55rem;letter-spacing:1px;}
 [data-theme="t3"] nav button{font-size:.65rem;letter-spacing:1px;}
 nav button.active{color:var(--accent);}
@@ -87,13 +103,11 @@ nav button svg{width:22px;height:22px;}
 
 /* HOY CARD */
 .hoy-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:22px 20px;margin-bottom:14px;position:relative;overflow:hidden;transition:background .3s,border-color .3s;}
-.cglow{position:absolute;top:0;right:0;width:140px;height:140px;border-radius:0 var(--rad) 0 100%;opacity:.07;pointer-events:none;transition:background .3s;}
+.cglow{position:absolute;top:0;right:0;width:150px;height:150px;border-radius:0 var(--rad) 0 100%;opacity:.07;pointer-events:none;transition:background .3s;}
 .gym-day .cglow{background:var(--accent);}
-.cal-day .cglow{background:var(--accent2);}
 .rest-day .cglow{background:var(--text3);}
 .tipo-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;margin-bottom:14px;border-radius:var(--rads);font-size:.75rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:var(--fh);}
 .gym-badge{background:var(--dim);color:var(--accent);border:1px solid rgba(232,255,74,.2);}
-.cal-badge{background:rgba(74,255,180,.08);color:var(--accent2);border:1px solid rgba(74,255,180,.2);}
 .rest-badge{background:rgba(100,100,100,.1);color:var(--text2);border:1px solid var(--border2);}
 [data-theme="t1"] .gym-badge{border-color:var(--accent);box-shadow:0 0 8px rgba(0,255,136,.1);}
 .hoy-dia{font-family:var(--fh);font-size:2.4rem;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1;}
@@ -113,25 +127,32 @@ nav button svg{width:22px;height:22px;}
 .sem-badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--rads);padding:5px 12px;font-size:.8rem;color:var(--text2);font-family:var(--fh);}
 .sem-badge strong{color:var(--accent);font-size:.9rem;}
 
+/* UBICACIÓN TAG */
+.loc-tag{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-family:var(--fh);padding:2px 8px;border-radius:var(--rads);margin-left:6px;font-weight:600;vertical-align:middle;}
+.loc-gym{background:rgba(74,158,255,.12);color:#4a9eff;border:1px solid rgba(74,158,255,.25);}
+.loc-casa{background:rgba(255,180,50,.10);color:#ffb432;border:1px solid rgba(255,180,50,.2);}
+
 /* EJERCICIOS */
-.ej-item{display:flex;align-items:flex-start;gap:16px;padding:15px 0;border-bottom:1px solid var(--border);cursor:pointer;touch-action:manipulation;user-select:none;transition:opacity .15s;}
+.ej-item{display:flex;align-items:flex-start;gap:16px;padding:15px 0;border-bottom:1px solid var(--border);touch-action:manipulation;user-select:none;transition:opacity .15s;}
 .ej-item:last-child{border-bottom:none;}
 .ej-item.done{opacity:.3;}
-.ej-check{width:26px;height:26px;border-radius:var(--rads);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;transition:all .15s;margin-top:2px;}
 .ej-item.done .ej-check{background:var(--accent);border-color:var(--accent);color:#000;}
+/* sin cursor pointer cuando ya está done */
+.ej-item:not(.done){cursor:pointer;}
 [data-theme="t1"] .ej-item.done .ej-check{box-shadow:0 0 8px var(--accent);}
+.ej-check{width:26px;height:26px;border-radius:var(--rads);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;transition:all .15s;margin-top:2px;}
 .ej-info{flex:1;min-width:0;}
 .ej-nombre{font-size:1.08rem;font-weight:600;color:var(--text);}
 .ej-series{font-size:.82rem;color:var(--text3);margin-top:2px;font-family:var(--fh);}
 .ej-tip{font-size:.75rem;color:var(--accent2);margin-top:3px;font-family:var(--fh);}
 
-/* CALISTENIA */
-.cal-msg{text-align:center;padding:32px 0;}
-.cal-icon{font-size:2.6rem;margin-bottom:12px;}
-.cal-tit{font-family:var(--fh);font-size:1.2rem;font-weight:700;color:var(--accent2);margin-bottom:6px;}
-.cal-sub{font-size:.95rem;color:var(--text3);line-height:1.6;}
+/* DESCANSO */
+.rest-msg{text-align:center;padding:32px 0;}
+.rest-icon{font-size:2.6rem;margin-bottom:12px;}
+.rest-tit{font-family:var(--fh);font-size:1.2rem;font-weight:700;color:var(--text2);margin-bottom:6px;}
+.rest-sub{font-size:.95rem;color:var(--text3);line-height:1.6;}
 
-/* STATS */
+/* STATS CUERPO */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .stat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:18px;text-align:center;}
 .stat-val{font-family:var(--fh);font-size:2.1rem;font-weight:700;color:var(--accent);line-height:1;}
@@ -140,11 +161,7 @@ nav button svg{width:22px;height:22px;}
 .stat-diff{font-size:.8rem;margin-top:6px;font-family:var(--fh);}
 .stat-diff.up{color:var(--success);}.stat-diff.down{color:var(--danger);}.stat-diff.eq{color:var(--text3);}
 
-/* PESO */
-.peso-form{display:flex;gap:10px;margin-bottom:12px;}
-.peso-form input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:var(--rads);color:var(--text);font-family:var(--fb);font-size:1.1rem;padding:12px 14px;outline:none;transition:border-color .15s;-webkit-appearance:none;}
-.peso-form input:focus{border-color:var(--accent);}
-.peso-form button{background:var(--accent);color:#000;border:none;border-radius:var(--rads);padding:12px 18px;font-family:var(--fh);font-size:.9rem;font-weight:700;cursor:pointer;touch-action:manipulation;white-space:nowrap;}
+/* historial peso */
 .peso-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);}
 .peso-row:last-child{border-bottom:none;}
 .peso-fecha{font-family:var(--fh);font-size:.8rem;color:var(--accent2);min-width:46px;font-weight:600;}
@@ -165,7 +182,6 @@ nav button svg{width:22px;height:22px;}
 .dias-row{display:flex;gap:7px;flex-wrap:wrap;}
 .dia-chip{padding:5px 10px;border-radius:var(--rads);font-size:.78rem;font-family:var(--fh);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
 .dia-chip.gym{background:var(--dim);color:var(--accent);border:1px solid rgba(232,255,74,.2);}
-.dia-chip.cal{background:rgba(74,255,180,.08);color:var(--accent2);border:1px solid rgba(74,255,180,.2);}
 .dia-chip.rest{background:rgba(100,100,100,.08);color:var(--text3);border:1px solid var(--border);}
 .dia-chip.pend{background:rgba(100,100,100,.05);color:var(--text3);border:1px solid var(--border);opacity:.4;}
 .sh-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
@@ -181,13 +197,13 @@ nav button svg{width:22px;height:22px;}
 .tema-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--rad);padding:16px;cursor:pointer;touch-action:manipulation;transition:border-color .15s,transform .1s;text-align:center;user-select:none;}
 .tema-card:active{transform:scale(.97);}
 .tema-card.activo{border-color:var(--accent);}
-.tema-prev{width:100%;height:64px;border-radius:var(--rads);margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;position:relative;}
-.p0{background:linear-gradient(135deg,#1c1c1c 0%,#0d0d0d 100%);border:1px solid #2a2a2a;}
+.tema-prev{width:100%;height:64px;border-radius:var(--rads);margin-bottom:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.p0{background:linear-gradient(135deg,#1c1c1c,#0d0d0d);border:1px solid #2a2a2a;}
 .p0::after{content:'';position:absolute;bottom:8px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e8ff4a,transparent);}
-.p1{background:linear-gradient(135deg,#081218 0%,#020408 100%);border:1px solid #0d2a1e;}
+.p1{background:linear-gradient(135deg,#081218,#020408);border:1px solid #0d2a1e;}
 .p1::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,136,.05) 3px,rgba(0,255,136,.05) 4px);}
-.p2{background:linear-gradient(135deg,#141414 0%,#0a0a0a 100%);border:1px solid #1e1a10;}
-.p3{background:linear-gradient(135deg,#1e0028 0%,#0e0010 100%);border:1px solid #3d0050;}
+.p2{background:linear-gradient(135deg,#141414,#0a0a0a);border:1px solid #1e1a10;}
+.p3{background:linear-gradient(135deg,#1e0028,#0e0010);border:1px solid #3d0050;}
 .pt0{font-family:'Space Grotesk',sans-serif;font-size:.65rem;color:#e8ff4a;letter-spacing:1px;}
 .pt1{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#00ff88;}
 .pt2{font-family:'Cinzel',serif;font-size:.72rem;color:#d4a017;letter-spacing:2px;}
@@ -204,6 +220,21 @@ nav button svg{width:22px;height:22px;}
 [data-theme="t2"] .sec-ttl{letter-spacing:3px;font-size:1.5rem;}
 [data-theme="t3"] .sec-ttl{letter-spacing:4px;font-size:2rem;}
 
+/* MODAL PESO */
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .2s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--card);border-top:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 22px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));width:100%;max-width:480px;margin:0 auto;transform:translateY(16px);transition:transform .2s;}
+.overlay.open .modal{transform:translateY(0);}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px;}
+.modal-tit{font-family:var(--fh);font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.modal-sub{font-size:.88rem;color:var(--text2);margin-bottom:20px;}
+.peso-input-row{display:flex;gap:10px;margin-bottom:14px;}
+.peso-input-row input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:var(--rads);color:var(--text);font-family:var(--fb);font-size:1.4rem;padding:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;text-align:center;font-weight:700;}
+.peso-input-row input:focus{border-color:var(--accent);}
+.btn-acento{width:100%;padding:15px;background:var(--accent);color:#000;border:none;border-radius:var(--rads);font-family:var(--fh);font-size:1rem;font-weight:700;cursor:pointer;touch-action:manipulation;margin-bottom:10px;transition:opacity .15s,transform .1s;}
+.btn-acento:active{transform:scale(.97);opacity:.85;}
+.btn-sec{width:100%;padding:13px;background:var(--surface);color:var(--text2);border:1px solid var(--border);border-radius:var(--rads);font-family:var(--fh);font-size:.9rem;cursor:pointer;touch-action:manipulation;}
+
 .empty{text-align:center;padding:32px 20px;font-size:.9rem;color:var(--text3);}
 .empty .ei{font-size:2.2rem;margin-bottom:10px;}
 ::-webkit-scrollbar{width:3px;}
@@ -211,10 +242,25 @@ nav button svg{width:22px;height:22px;}
 </style>
 </head>
 <body>
+
 <div id="splash" data-theme="t0">
   <div class="spl-logo">Gym<span>Sunx</span></div>
   <div class="spl-sub">Tu tracker personal</div>
   <div class="spl-bar"><div class="spl-fill"></div></div>
+</div>
+
+<!-- MODAL PESO SEMANAL -->
+<div class="overlay" id="modalPeso">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-tit">&#x2696; Pesaje semanal</div>
+    <div class="modal-sub" id="modalPesoSub">Ya pasó una semana. ¿Cuánto pesás hoy?</div>
+    <div class="peso-input-row">
+      <input type="number" id="inPesoModal" placeholder="55.0" step="0.1" min="30" max="200" inputmode="decimal">
+    </div>
+    <button class="btn-acento" onclick="confirmarPeso()">Guardar peso</button>
+    <button class="btn-sec" onclick="cerrarModalPeso()">Más tarde</button>
+  </div>
 </div>
 
 <div id="app" data-theme="t0">
@@ -227,6 +273,7 @@ nav button svg{width:22px;height:22px;}
   </header>
 
   <main>
+
     <!-- HOY -->
     <div class="section active" id="sec-hoy">
       <div class="hoy-card" id="hoyCard">
@@ -256,14 +303,6 @@ nav button svg{width:22px;height:22px;}
         <div class="stat-box"><div class="stat-val">174</div><div class="stat-lbl">Altura cm</div></div>
         <div class="stat-box"><div class="stat-val" id="stI">18.2</div><div class="stat-lbl">IMC</div></div>
         <div class="stat-box"><div class="stat-val" id="stS">1</div><div class="stat-lbl">Semana</div></div>
-      </div>
-      <div class="card">
-        <div class="card-lbl">Registrar peso semanal</div>
-        <div class="peso-form">
-          <input type="number" id="inPeso" placeholder="55.0" step="0.1" min="30" max="200" inputmode="decimal">
-          <button onclick="savePeso()">+ Guardar</button>
-        </div>
-        <div style="font-size:.8rem;color:var(--text3);font-family:var(--fh)">Registrá una vez por semana para ver tu progreso.</div>
       </div>
       <div class="card"><div class="card-lbl">Evolución de peso</div><div id="pesoList"></div></div>
     </div>
@@ -296,7 +335,7 @@ nav button svg{width:22px;height:22px;}
           <div class="tema-nombre">Hacker</div><div class="tema-sub">Terminal · Verde</div>
         </div>
         <div class="tema-card" id="tc-t2" onclick="setTema('t2')">
-          <div class="tema-prev p2"><span class="pt2">死 DEATH</span></div>
+          <div class="tema-prev p2"><span class="pt2">&#27515; DEATH</span></div>
           <div class="tema-nombre">Death Note</div><div class="tema-sub">Gótico · Dorado</div>
         </div>
         <div class="tema-card" id="tc-t3" onclick="setTema('t3')">
@@ -305,6 +344,7 @@ nav button svg{width:22px;height:22px;}
         </div>
       </div>
     </div>
+
   </main>
 
   <nav>
@@ -326,125 +366,97 @@ nav button svg{width:22px;height:22px;}
     </button>
   </nav>
 </div>
+
 <script>
-// ═══ RUTINA con progresión por semana ═══
-function rutina(sem){
-  const s=Math.min(sem,9);
-  return{
-    0:{n:'Domingo',  t:'rest',l:'Descanso',        ej:[]},
-    1:{n:'Lunes',    t:'cal', l:'Calistenia',       ej:[]},
-    2:{n:'Martes',   t:'gym', l:'Pecho + Tríceps',  ej:pecho(s)},
-    3:{n:'Miércoles',t:'cal', l:'Calistenia',       ej:[]},
-    4:{n:'Jueves',   t:'gym', l:'Espalda + Bíceps', ej:espalda(s)},
-    5:{n:'Viernes',  t:'cal', l:'Calistenia',       ej:[]},
-    6:{n:'Sábado',   t:'gym', l:'Piernas + Hombros',ej:piernas(s)},
-  };
-}
+// ═══════════════════════════════════════════════════════
+// RUTINA — nueva distribución
+// Lunes(1):   Pecho + Abs (gym + casa)
+// Martes(2):  Espalda (gym)
+// Miércoles(3): Piernas + Abs (gym + casa)
+// Jueves(4):  Hombros (gym)
+// Viernes(5): Brazos + Abs (gym + casa)
+// Sábado(6):  Full liviano (gym)
+// Domingo(0): Descanso
+// ═══════════════════════════════════════════════════════
 
-function pecho(s){
-  if(s<=2)return[
-    {n:'Press pecho máquina',  r:'4 × 10',t:'Peso moderado, controlá la bajada'},
-    {n:'Aperturas máquina',    r:'3 × 12',t:'Sentí el estiramiento en el pecho'},
-    {n:'Press inclinado',      r:'3 × 10',t:'Agarre algo más ancho que hombros'},
-    {n:'Tríceps polea',        r:'3 × 12',t:'Codo pegado al cuerpo'},
-    {n:'Flexiones',            r:'2 × fallo',t:'Al fallo total'},
-  ];
-  if(s<=4)return[
-    {n:'Press pecho máquina',       r:'4 × 12',t:'↑ +2 reps vs semanas anteriores'},
-    {n:'Aperturas máquina',         r:'4 × 12',t:'↑ +1 serie'},
-    {n:'Press inclinado mancuernas',r:'3 × 10',t:'↑ Variante con mancuernas'},
-    {n:'Tríceps polea',             r:'4 × 12',t:'↑ +1 serie'},
-    {n:'Fondos en banco',           r:'3 × 12',t:'↑ Reemplaza flexiones'},
-  ];
-  if(s<=6)return[
-    {n:'Press pecho máquina',       r:'5 × 10',t:'↑ +1 serie, subí el peso'},
-    {n:'Aperturas máquina',         r:'4 × 15',t:'↑ +3 reps'},
-    {n:'Press inclinado mancuernas',r:'4 × 10',t:'↑ +1 serie'},
-    {n:'Tríceps polea',             r:'4 × 15',t:'↑ +3 reps'},
-    {n:'Fondos en banco + peso',    r:'3 × 10',t:'↑ Agregá carga'},
-  ];
-  return[
-    {n:'Press pecho máquina',    r:'5 × 8',  t:'↑ Peso máximo, bajá reps'},
-    {n:'Cable cruzado',          r:'4 × 15', t:'↑ Cable para más rango'},
-    {n:'Press inclinado barra',  r:'4 × 8',  t:'↑ Barra para más carga'},
-    {n:'Tríceps francés',        r:'4 × 12', t:'↑ Variante de aislamiento'},
-    {n:'Flexiones con mochila',  r:'3 × 10', t:'↑ Agregá carga al torso'},
-  ];
-}
+const RUTINA = {
+  0:{n:'Domingo',  t:'rest', l:'Descanso'},
+  1:{n:'Lunes',    t:'gym',  l:'Pecho + Abs',       ej:ejLunes()},
+  2:{n:'Martes',   t:'gym',  l:'Espalda',            ej:ejMartes()},
+  3:{n:'Miércoles',t:'gym',  l:'Piernas + Abs',      ej:ejMiercoles()},
+  4:{n:'Jueves',   t:'gym',  l:'Hombros',            ej:ejJueves()},
+  5:{n:'Viernes',  t:'gym',  l:'Brazos + Abs',       ej:ejViernes()},
+  6:{n:'Sábado',   t:'gym',  l:'Full liviano',       ej:ejSabado()},
+};
 
-function espalda(s){
-  if(s<=2)return[
-    {n:'Jalón al pecho',    r:'4 × 10',t:'Agarre más ancho que hombros'},
-    {n:'Remo máquina',      r:'3 × 10',t:'Llevá el codo hacia atrás'},
-    {n:'Curl bíceps barra', r:'3 × 10',t:'Sin balancear el torso'},
-    {n:'Curl alternado',    r:'2 × 12', t:'Supina la muñeca al subir'},
-  ];
-  if(s<=4)return[
-    {n:'Jalón al pecho',        r:'4 × 12',  t:'↑ +2 reps'},
-    {n:'Remo máquina',          r:'4 × 10',  t:'↑ +1 serie'},
-    {n:'Remo con mancuerna',    r:'3×10 c/l',t:'↑ Variante unilateral'},
-    {n:'Curl bíceps barra',     r:'3 × 12',  t:'↑ +2 reps'},
-    {n:'Curl martillo',         r:'3 × 10',  t:'↑ Para braquial'},
-  ];
-  if(s<=6)return[
-    {n:'Jalón al pecho',     r:'5 × 10',  t:'↑ +1 serie'},
-    {n:'Remo máquina',       r:'4 × 12',  t:'↑ +2 reps'},
-    {n:'Remo mancuerna',     r:'4×10 c/l',t:'↑ +1 serie'},
-    {n:'Curl bíceps barra',  r:'4 × 10',  t:'↑ Subí peso'},
-    {n:'Curl martillo',      r:'3 × 12',  t:'↑ +2 reps'},
-  ];
-  return[
-    {n:'Dominadas asistidas',    r:'4 × 8',   t:'↑ Máxima activación espalda'},
-    {n:'Remo polea baja',        r:'4 × 12',  t:'↑ Cable para más rango'},
-    {n:'Remo mancuerna',         r:'4×10 c/l',t:''},
-    {n:'Curl bíceps concentrado',r:'3 × 12',  t:'↑ Aislamiento máximo'},
-    {n:'Curl predicador',        r:'3 × 10',  t:'↑ Para pico de bíceps'},
-  ];
-}
+function ejLunes(){return[
+  {n:'Press pecho máquina / banca', r:'4 × 8–12',  t:'Base del pecho, controlá la bajada lento',        loc:'gym'},
+  {n:'Press inclinado',             r:'3 × 8–12',  t:'Inclinación 30–45°, activa pecho superior',       loc:'gym'},
+  {n:'Aperturas máquina',           r:'3 × 10–15', t:'Estirá bien en la apertura, apretá al cerrar',    loc:'gym'},
+  {n:'Cruce de poleas',             r:'3 × 10–15', t:'Si hay disponibles, excelente finisher de pecho', loc:'gym'},
+  {n:'Crunch',                      r:'3 × 15–20', t:'Contraé el abdomen, no jalés el cuello',          loc:'casa'},
+  {n:'Elevaciones de piernas',      r:'3 × 10–15', t:'Controlá la bajada, no uses impulso',             loc:'casa'},
+  {n:'Plancha',                     r:'3 × 30–60s',t:'Cuerpo recto como tabla, respirá',                loc:'casa'},
+  {n:'Toques de talón',             r:'3 × 20',    t:'Flexión lateral, mantené el core apretado',       loc:'casa'},
+];}
 
-function piernas(s){
-  if(s<=2)return[
-    {n:'Prensa de piernas',     r:'4 × 10',t:'Pies al ancho de hombros'},
-    {n:'Sentadilla',            r:'3 × 10',t:'Bajá hasta el paralelo'},
-    {n:'Elevaciones laterales', r:'3 × 12',t:'Peso controlado, sin balanceo'},
-    {n:'Press hombro máquina',  r:'3 × 10',t:'No bloquees codos arriba'},
-    {n:'Gemelos de pie',        r:'4 × 15',t:'Pausa arriba y abajo'},
-  ];
-  if(s<=4)return[
-    {n:'Prensa de piernas',     r:'4 × 12',t:'↑ +2 reps'},
-    {n:'Sentadilla',            r:'4 × 10',t:'↑ +1 serie'},
-    {n:'Extensión cuádriceps',  r:'3 × 12',t:'↑ Aislamiento'},
-    {n:'Elevaciones laterales', r:'4 × 12',t:'↑ +1 serie'},
-    {n:'Press hombro mancuernas',r:'3 × 10',t:'↑ Mayor rango'},
-    {n:'Gemelos sentado',       r:'4 × 15',t:'↑ Variante sentado'},
-  ];
-  if(s<=6)return[
-    {n:'Prensa de piernas',      r:'5 × 10',  t:'↑ +1 serie, subí peso'},
-    {n:'Sentadilla búlgara',     r:'4×10 c/l',t:'↑ Variante unilateral'},
-    {n:'Extensión cuádriceps',   r:'4 × 12',  t:'↑ +1 serie'},
-    {n:'Elevaciones laterales',  r:'4 × 15',  t:'↑ +3 reps'},
-    {n:'Press hombro mancuernas',r:'4 × 10',  t:'↑ +1 serie'},
-    {n:'Gemelos superserie',     r:'3+3 × 15',t:'↑ De pie + sentado seguido'},
-  ];
-  return[
-    {n:'Sentadilla con barra',  r:'4 × 8',   t:'↑ Barra libre para más carga'},
-    {n:'Prensa de piernas',     r:'4 × 12',  t:''},
-    {n:'Sentadilla búlgara',    r:'4×10 c/l',t:''},
-    {n:'Face pull',             r:'4 × 15',  t:'↑ Hombros posteriores'},
-    {n:'Press hombro barra',    r:'3 × 8',   t:'↑ Barra para más carga'},
-    {n:'Gemelos superserie',    r:'4×15+15', t:'↑ Sin descanso entre variantes'},
-  ];
-}
+function ejMartes(){return[
+  {n:'Jalón al pecho',              r:'4 × 8–12',  t:'Llevá la barra al pecho superior, codos abajo',  loc:'gym'},
+  {n:'Remo máquina (agarre normal)',r:'3 × 8–12',  t:'Codo hacia atrás, apretá la espalda al tope',    loc:'gym'},
+  {n:'Remo con otro agarre',        r:'3 × 8–12',  t:'Varía grip (supino/prono/neutro) para mayor estímulo', loc:'gym'},
+];}
+
+function ejMiercoles(){return[
+  {n:'Prensa',                      r:'4 × 10–15', t:'Pies al ancho de hombros, bajá hasta 90°',       loc:'gym'},
+  {n:'Sentadilla',                  r:'3 × 8–12',  t:'Espalda recta, rodillas siguen la dirección del pie', loc:'gym'},
+  {n:'Extensión de piernas',        r:'3 × 12–15', t:'Aislamiento de cuádriceps, pausa arriba',         loc:'gym'},
+  {n:'Gemelos',                     r:'4 × 15–20', t:'Rango completo, pausa en la parte alta',          loc:'gym'},
+  {n:'Crunch',                      r:'3 × 15–20', t:'Contraé el abdomen, no jalés el cuello',          loc:'casa'},
+  {n:'Elevaciones de piernas',      r:'3 × 10–15', t:'Controlá la bajada, no uses impulso',             loc:'casa'},
+  {n:'Plancha',                     r:'3 × 30–60s',t:'Cuerpo recto como tabla, respirá',                loc:'casa'},
+  {n:'Toques de talón',             r:'3 × 20',    t:'Flexión lateral, mantené el core apretado',       loc:'casa'},
+];}
+
+function ejJueves(){return[
+  {n:'Press hombros máquina',       r:'4 × 8–12',  t:'No bloquees codos arriba, bajá controlado',      loc:'gym'},
+  {n:'Elevaciones laterales',       r:'3 × 12–15', t:'Peso liviano, codos levemente doblados, sin impulso', loc:'gym'},
+  {n:'Elevaciones frontales',       r:'3 × 10–12', t:'Alternadas o juntas, subí hasta altura de hombros', loc:'gym'},
+];}
+
+function ejViernes(){return[
+  {n:'Curl bíceps',                 r:'3 × 10–12', t:'Sin balancear el torso, contraé al tope',         loc:'gym'},
+  {n:'Curl alternado',              r:'3 × 10–12', t:'Supina la muñeca al subir para más activación',   loc:'gym'},
+  {n:'Tríceps polea (agarre normal)',r:'3 × 10–15',t:'Codo pegado, extensión completa abajo',           loc:'gym'},
+  {n:'Tríceps polea (otro agarre)', r:'3 × 10–15', t:'Varía el grip para estimular distintas cabezas',  loc:'gym'},
+  {n:'Crunch',                      r:'3 × 15–20', t:'Contraé el abdomen, no jalés el cuello',          loc:'casa'},
+  {n:'Elevaciones de piernas',      r:'3 × 10–15', t:'Controlá la bajada, no uses impulso',             loc:'casa'},
+  {n:'Plancha',                     r:'3 × 30–60s',t:'Cuerpo recto como tabla, respirá',                loc:'casa'},
+  {n:'Toques de talón',             r:'3 × 20',    t:'Flexión lateral, mantené el core apretado',       loc:'casa'},
+];}
+
+function ejSabado(){return[
+  {n:'Press pecho',                 r:'3 series',  t:'Día liviano, no te mates, es para sumar volumen', loc:'gym'},
+  {n:'Jalón al pecho',              r:'3 series',  t:'Peso moderado, técnica perfecta',                 loc:'gym'},
+  {n:'Prensa',                      r:'3 series',  t:'Sin ir al fallo, controlado',                     loc:'gym'},
+  {n:'Elevaciones laterales',       r:'3 series',  t:'Liviano, volumen puro',                           loc:'gym'},
+];}
 
 // ═══ STATE ═══
-let S={cl:{},pesos:[],sem:1,semV:1,tema:'t0',fi:null};
-function load(){try{const d=localStorage.getItem('gsx6');if(d)S=Object.assign({},S,JSON.parse(d));}catch(e){}}
-function save(){try{localStorage.setItem('gsx6',JSON.stringify(S));}catch(e){}}
+let S={
+  cl:{},       // checklist: { 'YYYY-MM-DD': { idx: true } }
+  pesos:[],    // [ { f:'YYYY-MM-DD', kg:55, s:1 } ]
+  sem:1,
+  semV:1,
+  tema:'t0',
+  fi:null,     // fecha de inicio
+  ultimoPeso:null, // fecha del último registro de peso
+};
+
+function load(){try{const d=localStorage.getItem('gsx7');if(d)S=Object.assign({},S,JSON.parse(d));}catch(e){}}
+function save(){try{localStorage.setItem('gsx7',JSON.stringify(S));}catch(e){}}
 
 // ═══ TEMA ═══
-function setTema(t){
-  S.tema=t; save(); applyTema(t);
-}
+function setTema(t){S.tema=t;save();applyTema(t);}
 function applyTema(t){
   document.getElementById('app').setAttribute('data-theme',t);
   document.getElementById('splash').setAttribute('data-theme',t);
@@ -454,55 +466,98 @@ function applyTema(t){
   });
   const c={t0:'#0d0d0d',t1:'#020408',t2:'#0a0a0a',t3:'#0e0010'};
   document.getElementById('metaTheme').content=c[t]||'#0d0d0d';
+  // también el splash
+  document.body.style.background=c[t]||'#0d0d0d';
+  document.documentElement.style.background=c[t]||'#0d0d0d';
+}
+
+// ═══ MODAL PESO ═══
+function checkPesoSemanal(){
+  // mostrar si nunca registró, o si pasaron 7+ días del último registro
+  if(!S.ultimoPeso){
+    // primera vez
+    setTimeout(()=>abrirModalPeso('Primera vez en GymSunx. ¿Cuánto pesás hoy?'),600);
+    return;
+  }
+  const hoy=new Date(), ult=new Date(S.ultimoPeso+'T00:00:00');
+  const dias=Math.floor((hoy-ult)/(1000*60*60*24));
+  if(dias>=7){
+    setTimeout(()=>abrirModalPeso('Pasaron '+dias+' días desde tu último pesaje. ¿Cuánto pesás hoy?'),600);
+  }
+}
+function abrirModalPeso(msg){
+  document.getElementById('modalPesoSub').textContent=msg;
+  document.getElementById('modalPeso').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function cerrarModalPeso(){
+  document.getElementById('modalPeso').classList.remove('open');
+  document.body.style.overflow='';
+}
+function confirmarPeso(){
+  const v=parseFloat(document.getElementById('inPesoModal').value);
+  if(!v||v<30||v>200){alert('Ingresá un peso válido (ej: 55.5)');return;}
+  const f=ds(new Date());
+  S.pesos.push({f,kg:v,s:S.sem});
+  S.ultimoPeso=f;
+  document.getElementById('inPesoModal').value='';
+  save(); cerrarModalPeso();
+  renderCuerpo();
 }
 
 // ═══ HOY ═══
 let _lt=-1,_ltt=0;
 function renderHoy(){
-  const dia=new Date().getDay(), r=rutina(S.sem)[dia], key=ds(new Date());
+  const dia=new Date().getDay();
+  const r=RUTINA[dia];
+  const key=ds(new Date());
   if(!S.cl[key])S.cl[key]={};
   document.getElementById('hoyDia').textContent=r.n;
   document.getElementById('headerDay').textContent=r.n.toUpperCase();
   document.getElementById('semB').textContent=S.sem;
   const card=document.getElementById('hoyCard');
-  card.className='hoy-card '+(r.t==='gym'?'gym-day':r.t==='cal'?'cal-day':'rest-day');
+  card.className='hoy-card '+(r.t==='gym'?'gym-day':'rest-day');
   const badge=document.getElementById('hoyBadge');
   const sub=document.getElementById('hoySub');
   const pw=document.getElementById('pw');
   const ejcard=document.getElementById('ejCard');
 
   if(r.t==='gym'){
-    badge.className='tipo-badge gym-badge'; badge.textContent='🏋️ Gym — '+r.l;
+    badge.className='tipo-badge gym-badge';
+    badge.textContent='🏋️ '+r.l;
     sub.textContent='Completá los ejercicios de hoy';
-    pw.style.display='block'; ejcard.style.display='block';
+    pw.style.display='block';
+    ejcard.style.display='block';
     document.getElementById('ejLbl').textContent='Ejercicios · '+r.l;
     const lista=document.getElementById('ejList');
     lista.innerHTML=r.ej.map((e,i)=>{
       const done=!!S.cl[key][i];
+      const locTag=e.loc==='gym'
+        ?'<span class="loc-tag loc-gym">🏋️ gym</span>'
+        :'<span class="loc-tag loc-casa">🏠 casa</span>';
       return`<div class="ej-item${done?' done':''}" id="ej${i}" ontouchend="tEj(${i},event)" onclick="tEj(${i},event)">
         <div class="ej-check">${done?'✓':''}</div>
         <div class="ej-info">
-          <div class="ej-nombre">${e.n}</div>
+          <div class="ej-nombre">${e.n}${locTag}</div>
           <div class="ej-series">${e.r}</div>
           ${e.t?`<div class="ej-tip">${e.t}</div>`:''}
         </div>
       </div>`;
     }).join('');
-    const tot=r.ej.length, done=Object.values(S.cl[key]).filter(Boolean).length;
+    const tot=r.ej.length;
+    const done=Object.values(S.cl[key]).filter(Boolean).length;
     const pct=tot?Math.round(done/tot*100):0;
     document.getElementById('pf').style.width=pct+'%';
     document.getElementById('plbl').textContent=done+' de '+tot;
     document.getElementById('ppct').textContent=pct+'%';
-  } else if(r.t==='cal'){
-    badge.className='tipo-badge cal-badge'; badge.textContent='🤸 Calistenia';
-    sub.textContent='Entrenamiento con el profesor';
-    pw.style.display='none'; ejcard.style.display='block';
-    document.getElementById('ejLbl').textContent='Sesión de hoy';
-    document.getElementById('ejList').innerHTML=`<div class="cal-msg"><div class="cal-icon">🤸</div><div class="cal-tit">Calistenia</div><div class="cal-sub">Los ejercicios los define<br>tu profesor. ¡A darle!</div></div>`;
   } else {
-    badge.className='tipo-badge rest-badge'; badge.textContent='🛋️ Descanso';
-    sub.textContent='Día de recuperación';
-    pw.style.display='none'; ejcard.style.display='none';
+    badge.className='tipo-badge rest-badge';
+    badge.textContent='🛋️ Descanso';
+    sub.textContent='Día de recuperación y descanso';
+    pw.style.display='none';
+    ejcard.style.display='block';
+    document.getElementById('ejLbl').textContent='Hoy';
+    document.getElementById('ejList').innerHTML=`<div class="rest-msg"><div class="rest-icon">🛋️</div><div class="rest-tit">Descanso</div><div class="rest-sub">Recuperate, estirá, dormí bien.<br>El descanso también es entrenamiento.</div></div>`;
   }
 }
 
@@ -513,14 +568,16 @@ function tEj(i,e){
   _lt=i;_ltt=now;
   const key=ds(new Date());
   if(!S.cl[key])S.cl[key]={};
-  S.cl[key][i]=!S.cl[key][i];
+  // NO se puede desmarcar — solo marcar
+  if(S.cl[key][i])return;
+  S.cl[key][i]=true;
   if(navigator.vibrate)navigator.vibrate(30);
-  save(); renderHoy();
+  save();renderHoy();
 }
 
 // ═══ CUERPO ═══
 function renderCuerpo(){
-  const p=S.pesos, last=p[p.length-1], prev=p[p.length-2];
+  const p=S.pesos,last=p[p.length-1],prev=p[p.length-2];
   const pa=last?last.kg:55;
   document.getElementById('stP').textContent=pa;
   document.getElementById('stS').textContent=S.sem;
@@ -528,60 +585,52 @@ function renderCuerpo(){
   const de=document.getElementById('stD');
   if(last&&prev){
     const d=(last.kg-prev.kg).toFixed(1);
-    if(d>0){de.textContent='▲ +'+d+' kg vs semana ant.';de.className='stat-diff up';}
-    else if(d<0){de.textContent='▼ '+d+' kg vs semana ant.';de.className='stat-diff down';}
+    if(d>0){de.textContent='▲ +'+d+' kg';de.className='stat-diff up';}
+    else if(d<0){de.textContent='▼ '+d+' kg';de.className='stat-diff down';}
     else{de.textContent='= Sin cambio';de.className='stat-diff eq';}
-  } else de.textContent='';
+  }else de.textContent='';
   const h=document.getElementById('pesoList');
-  if(!p.length){h.innerHTML=`<div class="empty"><div class="ei">📏</div><div>Aún no registraste peso</div></div>`;return;}
-  h.innerHTML=[...p].reverse().slice(0,12).map((x,i,arr)=>{
+  if(!p.length){h.innerHTML=`<div class="empty"><div class="ei">📏</div><div>Aún no hay registros de peso</div></div>`;return;}
+  h.innerHTML=[...p].reverse().slice(0,16).map((x,i,arr)=>{
     const ant=arr[i+1];
     let delta='';
     if(ant){const d=(x.kg-ant.kg).toFixed(1);const cls=d>0?'up':d<0?'down':'eq';const sym=d>0?'▲ +':d<0?'▼ ':'= ';delta=`<div class="peso-delta ${cls}">${sym}${d} kg</div>`;}
     return`<div class="peso-row"><div class="peso-fecha">${fd(x.f)}</div><div class="peso-sem">Semana ${x.s}</div><div><div class="peso-kg">${x.kg} kg</div>${delta}</div></div>`;
   }).join('');
 }
-function savePeso(){
-  const v=parseFloat(document.getElementById('inPeso').value);
-  if(!v||v<30||v>200){alert('Ingresá un peso válido');return;}
-  S.pesos.push({f:ds(new Date()),kg:v,s:S.sem});
-  document.getElementById('inPeso').value='';
-  save(); renderCuerpo();
-}
 
 // ═══ PROGRESO ═══
 function getInicio(semN){
-  let fb=S.fi;
-  if(!fb){
-    const keys=Object.keys(S.cl).sort();
-    fb=keys.length?keys[0]:ds(new Date());
-    const d=new Date(fb+'T00:00:00'),dow=d.getDay();
-    d.setDate(d.getDate()+(dow===0?-6:1-dow));
-    fb=ds(d);
-  }
-  const b=new Date(fb+'T00:00:00');
-  b.setDate(b.getDate()+(semN-1)*7);
-  return b;
+  let fb=S.fi||ds(new Date());
+  const d=new Date(fb+'T00:00:00'),dow=d.getDay();
+  d.setDate(d.getDate()+(dow===0?-6:1-dow));
+  const base=new Date(d);
+  base.setDate(base.getDate()+(semN-1)*7);
+  return base;
 }
 function getDias(semN){
-  const inicio=getInicio(semN); const dias=[];
+  const inicio=getInicio(semN);const dias=[];
   for(let i=0;i<7;i++){const d=new Date(inicio);d.setDate(d.getDate()+i);dias.push(ds(d));}
   return dias;
 }
 function infoSem(semN){
   const dias=getDias(semN);
   const DNOM=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const rt=rutina(semN); const hoy=ds(new Date());
-  let gc=0,gt=0,cal=0;
+  const hoy=ds(new Date());
+  let gc=0,gt=0;
   const det=dias.map(f=>{
-    const fw=new Date(f+'T00:00:00'); const dow=fw.getDay();
-    const r=rt[dow]; const ck=S.cl[f]||{}; const fut=f>hoy;
+    const fw=new Date(f+'T00:00:00');const dow=fw.getDay();
+    const r=RUTINA[dow];const ck=S.cl[f]||{};const fut=f>hoy;
     let comp=false;
-    if(r.t==='gym'){gt++;const done=Object.values(ck).filter(Boolean).length;comp=r.ej.length>0&&done===r.ej.length;if(comp)gc++;}
-    else if(r.t==='cal'&&!fut)cal++;
+    if(r.t==='gym'){
+      gt++;
+      const done=Object.values(ck).filter(Boolean).length;
+      comp=r.ej&&r.ej.length>0&&done===r.ej.length;
+      if(comp)gc++;
+    }
     return{f,dow,t:r.t,nom:DNOM[dow],comp,fut};
   });
-  return{det,gc,gt,cal,act:gc+cal};
+  return{det,gc,gt,act:gc};
 }
 function renderProgreso(){
   const sem=S.semV;
@@ -589,11 +638,11 @@ function renderProgreso(){
   const inf=infoSem(sem);
   document.getElementById('pgrid').innerHTML=`
     <div class="ps"><div class="ps-val">${inf.gc}/${inf.gt}</div><div class="ps-lbl">Gym completadas</div></div>
-    <div class="ps"><div class="ps-val">${inf.act}</div><div class="ps-lbl">Días activos</div></div>`;
+    <div class="ps"><div class="ps-val">${Math.round(inf.gc/Math.max(inf.gt,1)*100)}%</div><div class="ps-lbl">Completado</div></div>`;
   const hoy=ds(new Date());
   document.getElementById('drow').innerHTML=inf.det.map(d=>{
     let cls='pend';
-    if(!d.fut){if(d.t==='gym')cls=d.comp?'gym':'pend';else if(d.t==='cal')cls='cal';else cls='rest';}
+    if(!d.fut){if(d.t==='gym')cls=d.comp?'gym':'pend';else cls='rest';}
     const esHoy=d.f===hoy?' (hoy)':'';
     return`<div class="dia-chip ${cls}">${d.nom}${esHoy}</div>`;
   }).join('');
@@ -603,7 +652,7 @@ function renderProgreso(){
   for(let i=S.sem;i>=1;i--){
     const inf2=infoSem(i);
     const pct=inf2.gt>0?Math.round(inf2.gc/inf2.gt*100):0;
-    rows+=`<div class="sh-row"><div class="sh-num">Sem ${i}</div><div class="sh-info"><div style="font-size:.85rem;color:var(--text2)">${inf2.gc} gym · ${inf2.cal} cal · ${inf2.act} días</div><div class="sh-bar"><div class="sh-bar-f" style="width:${pct}%"></div></div></div><div class="sh-score">${pct}%</div></div>`;
+    rows+=`<div class="sh-row"><div class="sh-num">Sem ${i}</div><div class="sh-info"><div style="font-size:.85rem;color:var(--text2)">${inf2.gc} de ${inf2.gt} sesiones gym</div><div class="sh-bar"><div class="sh-bar-f" style="width:${pct}%"></div></div></div><div class="sh-score">${pct}%</div></div>`;
   }
   h.innerHTML=rows;
 }
@@ -624,12 +673,37 @@ function showSec(id,btn){
 function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fd(s){const[,m,d]=s.split('-');return d+'/'+m;}
 
+// ═══ AVANCE DE SEMANA AUTOMÁTICO ═══
+function checkSemana(){
+  if(!S.fi)return;
+  const inicio=getInicio(S.sem);
+  const finSem=new Date(inicio);
+  finSem.setDate(finSem.getDate()+7);
+  const hoy=new Date();
+  hoy.setHours(0,0,0,0);
+  if(hoy>=finSem){
+    S.sem++;
+    S.semV=S.sem;
+    save();
+  }
+}
+
 // ═══ INIT ═══
 load();
 if(!S.fi){S.fi=ds(new Date());save();}
 S.semV=S.sem;
+
+// aplicar colores base al html/body según tema guardado
+const bgColors={t0:'#0d0d0d',t1:'#020408',t2:'#0a0a0a',t3:'#0e0010'};
+const bgActual=bgColors[S.tema||'t0']||'#0d0d0d';
+document.documentElement.style.background=bgActual;
+document.body.style.background=bgActual;
+
 applyTema(S.tema||'t0');
+checkSemana();
 renderHoy();
+checkPesoSemanal();
+
 setTimeout(()=>document.getElementById('splash').classList.add('hide'),1100);
 </script>
 </body>
