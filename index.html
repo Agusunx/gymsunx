@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="t0">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -13,10 +13,14 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="apple-touch-icon" href="icon-512.png">
 <title>GymSunx</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&family=Cinzel:wght@400;700&family=IM+Fell+English&family=Bebas+Neue&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&family=Cinzel:wght@400;700&family=IM+Fell+English&family=Bebas+Neue&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&family=Cinzel:wght@400;700&family=IM+Fell+English&family=Bebas+Neue&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ===== TEMAS ===== */
-[data-theme="t0"]{--bg:#0d0d0d;--surface:#161616;--card:#1c1c1c;--border:#2a2a2a;--border2:#333;--accent:#e8ff4a;--accent2:#4affb4;--dim:rgba(232,255,74,.10);--text:#f5f5f5;--text2:#888;--text3:#444;--danger:#ff4a6b;--success:#4affb4;--fh:'Space Grotesk',sans-serif;--fb:'Inter',sans-serif;--rad:14px;--rads:8px;}
+:root{--bg:#0d0d0d;--surface:#161616;--card:#1c1c1c;--border:#2a2a2a;--border2:#333;--accent:#e8ff4a;--accent2:#4affb4;--dim:rgba(232,255,74,.10);--text:#f5f5f5;--text2:#888;--text3:#444;--danger:#ff4a6b;--success:#4affb4;--fh:'Space Grotesk',system-ui,sans-serif;--fb:'Inter',system-ui,sans-serif;--rad:14px;--rads:8px;}
+[data-theme="t0"]{--bg:#0d0d0d;--surface:#161616;--card:#1c1c1c;--border:#2a2a2a;--border2:#333;--accent:#e8ff4a;--accent2:#4affb4;--dim:rgba(232,255,74,.10);--text:#f5f5f5;--text2:#888;--text3:#444;--danger:#ff4a6b;--success:#4affb4;--fh:'Space Grotesk',system-ui,sans-serif;--fb:'Inter',system-ui,sans-serif;--rad:14px;--rads:8px;}
 [data-theme="t1"]{--bg:#020408;--surface:#060d10;--card:#081218;--border:#0d2a1e;--border2:#0a3d2a;--accent:#00ff88;--accent2:#00ccff;--dim:rgba(0,255,136,.08);--text:#c8ffe8;--text2:#2a6b4a;--text3:#164d30;--danger:#ff2244;--success:#00ff88;--fh:'Share Tech Mono',monospace;--fb:'Rajdhani',sans-serif;--rad:3px;--rads:2px;}
 [data-theme="t2"]{--bg:#0a0a0a;--surface:#111;--card:#141414;--border:#1e1a10;--border2:#2e2510;--accent:#d4a017;--accent2:#8b1a1a;--dim:rgba(212,160,23,.08);--text:#e8e0cc;--text2:#7a6a40;--text3:#3d3520;--danger:#8b0000;--success:#d4a017;--fh:'Cinzel',serif;--fb:'IM Fell English',serif;--rad:2px;--rads:1px;}
 [data-theme="t3"]{--bg:#0e0010;--surface:#180020;--card:#1e0028;--border:#3d0050;--border2:#5a0070;--accent:#ff2d78;--accent2:#ff9a00;--dim:rgba(255,45,120,.10);--text:#ffe8f5;--text2:#b060a0;--text3:#703060;--danger:#ff2d78;--success:#ff9a00;--fh:'Bebas Neue',cursive;--fb:'Barlow',sans-serif;--rad:0px;--rads:0px;}
@@ -458,6 +462,7 @@ function save(){try{localStorage.setItem('gsx7',JSON.stringify(S));}catch(e){}}
 // ═══ TEMA ═══
 function setTema(t){S.tema=t;save();applyTema(t);}
 function applyTema(t){
+  document.documentElement.setAttribute('data-theme',t);
   document.getElementById('app').setAttribute('data-theme',t);
   document.getElementById('splash').setAttribute('data-theme',t);
   ['t0','t1','t2','t3'].forEach(id=>{
@@ -699,6 +704,8 @@ const bgActual=bgColors[S.tema||'t0']||'#0d0d0d';
 document.documentElement.style.background=bgActual;
 document.body.style.background=bgActual;
 
+// aplicar tema al html root también
+document.documentElement.setAttribute('data-theme', S.tema||'t0');
 applyTema(S.tema||'t0');
 checkSemana();
 renderHoy();
