@@ -294,7 +294,7 @@ nav button svg{width:21px;height:21px;}
 .sd.on{background:var(--ac);border-color:var(--ac);color:#000;}
 #perfiles{position:fixed;inset:0;z-index:9500;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
 #perfiles.on{display:flex;}
-#perfiles .mbtn{max-width:320px;margin-bottom:12px;}
+#perfiles .mbtn{max-width:320px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:1.15rem;}
 </style>
 </head>
 <body>
@@ -498,9 +498,9 @@ function mkRut(k) {
 }
 
 var PERFILES = {
-  agusunx: {nombre:'agusunx', kg:63.5, cm:174, rut:mkRut(0)},
-  nashio:  {nombre:'nashio',  kg:58, cm:170, rut:mkRut(1)},
-  elende:  {nombre:'elende',  kg:115, cm:189, rut:mkRut(2)}
+  agusunx: {nombre:'Agusunx', icono:'👨‍💻', kg:63.5, cm:174, rut:mkRut(0)},
+  nashio:  {nombre:'Nashio', icono:'🧢', kg:58, cm:170, rut:mkRut(1)},
+  elende:  {nombre:'Elende', icono:'🕴️', kg:115, cm:189, rut:mkRut(2)}
 };
 
 // ══ STATE ══ (cada perfil guarda lo suyo en su propia clave)
@@ -937,13 +937,14 @@ function boot(id) {
     save();
   }
   apTema(S.tema || 't0');
+  document.querySelector('.logo').innerHTML = '<b>Gym</b>Sunx <span style="font-size:1.1rem">' + P.icono + '</span>';
   checkSem();
   renderHoy();
 }
 
 function mostrarPerfiles() {
   var h = '<div class="spl-logo"><b>Gym</b>Sunx</div><div class="spl-sub" style="margin-bottom:28px">¿Quién sos?</div><div style="color:var(--tx2);font-size:.9rem;margin:-14px 0 22px;text-align:center">Elegí bien: después no se puede cambiar</div>';
-  for (var id in PERFILES) h += '<button class="mbtn" onclick="elegirPerfil(\'' + id + '\')">' + PERFILES[id].nombre + '</button>';
+  for (var id in PERFILES) h += '<button class="mbtn" onclick="elegirPerfil(\'' + id + '\')">' + '<span style="font-size:1.9rem">' + PERFILES[id].icono + '</span>' + PERFILES[id].nombre + '</button>';
   var el = document.getElementById('perfiles');
   el.innerHTML = h;
   el.classList.add('on');
