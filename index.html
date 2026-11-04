@@ -932,11 +932,13 @@ function checkPeso() {
 }
 
 // ══ PERFIL / INIT ══
-var BACKFILL = ['2026-11-02'];
+// días ya entrenados antes de instalar la app, por perfil (se marcan completos una sola vez)
+var BACKFILL = {agusunx:['2026-11-02','2026-11-03'], nashio:['2026-11-02','2026-11-03'], elende:['2026-11-02','2026-11-03']};
 function aplicarBackfill() {
   if (!S.bf) S.bf = {};
-  for (var b = 0; b < BACKFILL.length; b++) {
-    var f = BACKFILL[b];
+  var L = BACKFILL[PID] || [];
+  for (var b = 0; b < L.length; b++) {
+    var f = L[b];
     if (S.bf[f]) continue;
     var r = RUT[new Date(f + 'T00:00:00').getDay()];
     S.cl[f] = {};
