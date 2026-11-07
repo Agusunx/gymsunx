@@ -489,28 +489,64 @@ var VIE = {c:['Elíptica, 5–8 min suave','Bicicleta, 5–8 min suave',CT_LARGO
   ['Gemelos',[3,2,2],15],
   ['Abdominales en máquina',[3,2,2],[15,12,15]]]};
 
-function mkRut(k) {
+// ══ RUTINA NUEVA (desde el lunes 9/11) ══  filas: [ejercicio, [series agusunx, nashio, davini], reps]
+var LUN2 = {c:['Bicicleta o elíptica, 5–8 min suave','Caminadora, 5 min a 3–3,5 km/h','Caminadora, 20 min: 5 min a 3,5 km/h · 10 min a 5–5,5 km/h · 5 min a 3,5 km/h'], e:[
+  ['Press de pecho en máquina',[3,2,3],[15,12,15]],
+  ['Jalón al pecho',[3,2,3],[15,12,15]],
+  ['Press inclinado con mancuernas',[2,2,2],[15,12,15]],
+  ['Remo en máquina',[3,2,3],[15,12,15]],
+  ['Curl martillo',[2,2,2],[15,12,15]]]};
+var MAR2 = {c:['Elíptica, 5 min suave','Bicicleta, 5–8 min suave','Bicicleta, 20 min: 5 min suave · 12 min moderado · 3 min suave'], e:[
+  ['Prensa',[3,2,3],[15,12,15]],
+  ['Curl femoral',[3,2,3],[15,12,15]],
+  ['Extensión de piernas',[2,2,2],[15,12,15]],
+  ['Hip thrust',[3,2,3],[15,12,15]],
+  ['Gemelos',[3,2,3],15]]};
+var MIE2 = {c:['Elíptica, 5–8 min suave','Caminadora, 5 min a 3–3,5 km/h','Caminadora, 20 min: 5 min a 3,5 km/h · 4 intervalos de 1 min a 5,5–6 km/h + 2 min caminando a 4 km/h · completar con caminata suave hasta los 20 min. El trote es opcional: si no se siente cómodo, caminar rápido.'], e:[
+  ['Press de hombros',[3,2,3],[15,12,15]],
+  ['Aperturas en máquina',[2,2,2],[15,12,15]],
+  ['Remo sentado',[2,2,2],[15,12,15]],
+  ['Elevaciones laterales',[3,2,3],[15,12,15]],
+  ['Curl alterno con mancuernas',[2,2,2],[15,12,15]],
+  ['Tríceps con cuerda',[2,2,2],[15,12,15]],
+  ['Plancha',[3,2,3],['30 s','20 s','30 s']]]};
+var VIE2 = {c:['Elíptica, 5–8 min suave','Bicicleta, 5–8 min suave','Elíptica, 25 min: 5 min suave · 15 min moderado · 5 min suave. Para cerrar: escaladora 5 min a nivel bajo.'], e:[
+  ['Prensa',[3,2,3],[15,12,15]],
+  ['Curl femoral',[3,2,3],[15,12,15]],
+  ['Abductores',[2,2,2],15],
+  ['Gemelos',[3,2,3],15],
+  ['Abdominales en máquina',[3,2,3],[15,12,15]],
+  ['Elevación de piernas',[3,2,3],[12,10,12]]]};
+var T2 = {lun:LUN2, mar:MAR2, mie:MIE2, vie:VIE2};
+
+function mkRut(k, TB) {
+  TB = TB || {lun:LUN, mar:MAR, mie:MIE, vie:VIE};
   function dia(n, l, T) { return {n:n, t:'gym', l:l, ej:[CAR(T.c[k]), CALENT].concat(EJ(T.e, k), [ESTIRA])}; }
   function desc(n) { return {n:n, t:'rest', l:'Descanso', ej:[]}; }
   return {
     0: desc('Domingo'),
-    1: dia('Lunes', 'Pecho, espalda y bíceps', LUN),
-    2: dia('Martes', 'Piernas y glúteos', MAR),
-    3: dia('Miércoles', 'Hombros, pecho y brazos', MIE),
+    1: dia('Lunes', 'Pecho, espalda y bíceps', TB.lun),
+    2: dia('Martes', 'Piernas y glúteos', TB.mar),
+    3: dia('Miércoles', 'Hombros, pecho y brazos', TB.mie),
     4: desc('Jueves'),
-    5: dia('Viernes', 'Piernas y abdomen', VIE),
+    5: dia('Viernes', 'Piernas y abdomen', TB.vie),
     6: desc('Sábado')
   };
 }
 
 var PERFILES = {
-  agusunx: {nombre:'Agusunx', icono:'👨‍💻', kg:63.5, cm:174, rut:mkRut(0)},
-  nashio:  {nombre:'Nashio', icono:'🧢', kg:58, cm:170, rut:mkRut(1)},
-  elende:  {nombre:'Davini', icono:'🕴️', kg:115, cm:189, rut:mkRut(2)}
+  agusunx: {nombre:'Agusunx', icono:'👨‍💻', kg:63.5, cm:174, ruts:[{desde:'2000-01-01', rut:mkRut(0)}, {desde:'2026-11-09', rut:mkRut(0, T2)}]},
+  nashio:  {nombre:'Nashio', icono:'🧢', kg:58, cm:170, ruts:[{desde:'2000-01-01', rut:mkRut(1)}, {desde:'2026-11-09', rut:mkRut(1, T2)}]},
+  elende:  {nombre:'Davini', icono:'🕴️', kg:115, cm:189, ruts:[{desde:'2000-01-01', rut:mkRut(2)}, {desde:'2026-11-09', rut:mkRut(2, T2)}]}
 };
 
 // ══ STATE ══ (cada perfil guarda lo suyo en su propia clave)
 var PID = null, P = null, RUT = {};
+function rutDe(f) {
+  var r = P.ruts[0].rut;
+  for (var i = 0; i < P.ruts.length; i++) if (P.ruts[i].desde <= f) r = P.ruts[i].rut;
+  return r;
+}
 var S = {cl:{}, pesos:[], sem:1, semV:1, tema:'t0', fi:null, up:null};
 
 function load() {
@@ -564,7 +600,7 @@ function diaStats(key, r) {
 
 function renderHoy() {
   var dia = new Date().getDay();
-  var r = RUT[dia];
+  var r = rutDe(ds(new Date()))[dia];
   var key = ds(new Date());
   if (!S.cl[key]) S.cl[key] = {};
 
@@ -631,7 +667,7 @@ function tEj(i, e) {
   if (_lt === i && now - _ltt < 400) return;
   _lt = i; _ltt = now;
   var key = ds(new Date());
-  var ej = RUT[new Date().getDay()].ej[i];
+  var ej = rutDe(ds(new Date()))[new Date().getDay()].ej[i];
   var n = nd(key, i, ej);
   if (n >= ej.s) return; // no se puede desmarcar
   _pendingEj = i;
@@ -650,7 +686,7 @@ function confirmarEj() {
   var i = _pendingEj;
   _pendingEj = -1;
   var key = ds(new Date());
-  var r = RUT[new Date().getDay()];
+  var r = rutDe(ds(new Date()))[new Date().getDay()];
   if (!S.cl[key]) S.cl[key] = {};
   S.cl[key][i] = nd(key, i, r.ej[i]) + 1;
   try { if (navigator.vibrate) navigator.vibrate([20,10,20]); } catch(e2) {}
@@ -666,7 +702,7 @@ function cancelarConfirm() {
 }
 
 function checkAllDone() {
-  var r = RUT[new Date().getDay()];
+  var r = rutDe(ds(new Date()))[new Date().getDay()];
   if (r.t !== 'gym') return;
   var st = diaStats(ds(new Date()), r);
   if (st.total && st.done === st.total) {
@@ -846,7 +882,7 @@ function infoSem(n) {
     d.setDate(d.getDate()+i);
     var f = ds(d);
     var dow = d.getDay();
-    var r = RUT[dow];
+    var r = rutDe(f)[dow];
     var ck = S.cl[f] || {};
     var fut = f > hoy;
     var comp = false;
@@ -933,14 +969,14 @@ function checkPeso() {
 
 // ══ PERFIL / INIT ══
 // días ya entrenados antes de instalar la app, por perfil (se marcan completos una sola vez)
-var BACKFILL = {agusunx:['2026-11-02','2026-11-03'], nashio:['2026-11-02','2026-11-03'], elende:['2026-11-02','2026-11-03']};
+var BACKFILL = {agusunx:['2026-11-02','2026-11-03','2026-11-04','2026-11-06'], nashio:['2026-11-02','2026-11-03','2026-11-06'], elende:['2026-11-02','2026-11-03','2026-11-04','2026-11-06']};
 function aplicarBackfill() {
   if (!S.bf) S.bf = {};
   var L = BACKFILL[PID] || [];
   for (var b = 0; b < L.length; b++) {
     var f = L[b];
     if (S.bf[f]) continue;
-    var r = RUT[new Date(f + 'T00:00:00').getDay()];
+    var r = rutDe(f)[new Date(f + 'T00:00:00').getDay()];
     S.cl[f] = {};
     for (var i = 0; i < r.ej.length; i++) S.cl[f][i] = r.ej[i].s;
     S.bf[f] = 1;
@@ -949,7 +985,7 @@ function aplicarBackfill() {
 }
 
 function boot(id) {
-  PID = id; P = PERFILES[id]; RUT = P.rut;
+  PID = id; P = PERFILES[id]; RUT = rutDe(ds(new Date()));
   S = {cl:{}, pesos:[], sem:1, semV:1, tema:'t0', fi:null, up:null};
   load();
   if (!S.fi) {
