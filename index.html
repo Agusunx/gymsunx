@@ -1207,7 +1207,7 @@ function renderAsis() {
   var html = _asisOk ? '' : '<div class="card" style="color:var(--err)">Sin conexión: se muestra lo último que se pudo cargar.</div>';
   var l = sesiones(), prox = [], pas = [];
   for (var i = 0; i < l.length; i++) (faseDe(l[i]) === 'pasada' ? pas : prox).push(l[i]);
-  if (!prox.length) html += '<div class="card">No hay entrenamientos próximos. Agus tiene que fijar los horarios.</div>';
+  if (!prox.length) html += '<div class="card">No hay entrenamientos próximos.</div>';
   for (var j = 0; j < prox.length; j++) html += tarjetaSes(prox[j]);
   el.innerHTML = html + historialHtml(pas);
 }
