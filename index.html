@@ -301,6 +301,31 @@ nav button svg{width:21px;height:21px;}
 [data-theme="t3"] .dchip.gym{background:var(--ac);color:#fff;border-color:#fff;}
 [data-theme="t3"] .ejn{font-weight:800;}
 .tp3{background:#111;border:3px solid #fff;color:#fff;box-shadow:4px 4px 0 #ff4d2e;font-weight:900;letter-spacing:2px;font-family:"Courier New",monospace;border-radius:0;}
+#asisBanner:empty{display:none;}
+.abn{border:2px solid var(--ac);}
+.abn-t{font-weight:800;font-size:1.1rem;margin-bottom:4px;}
+.abn-s{color:var(--tx2);font-size:.9rem;margin-bottom:12px;}
+.abtns{display:flex;gap:10px;}
+.abtns button{flex:1;padding:14px;border:none;border-radius:var(--rads);font-weight:800;font-size:1rem;font-family:inherit;cursor:pointer;touch-action:manipulation;}
+.abtns button.off{opacity:.35;}
+[data-theme] button.bvoy{background:var(--ok);color:#000;}
+[data-theme] button.bno{background:var(--err);color:#fff;}
+.gs-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.gs-dia{font-weight:800;font-size:1.1rem;}
+.gs-hora{font-weight:800;font-size:1.1rem;color:var(--ac);}
+.gs-badge{display:inline-block;font-size:.78rem;font-weight:700;padding:4px 10px;border:1.5px solid currentColor;border-radius:99px;margin-bottom:8px;}
+.gs-badge.abierta{color:var(--ok);}
+.gs-badge.cerrada{color:var(--tx3);}
+.gs-p{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:.95rem;}
+.gs-d{width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;}
+.gs-d.voy{background:var(--ok);}
+.gs-d.no,.gs-d.auto{background:var(--err);}
+.gs-d.sin{background:var(--tx3);}
+.gs-e{margin-left:auto;color:var(--tx2);font-size:.85rem;text-align:right;}
+.gs-h{padding:8px 0;border-top:1px solid var(--bor);}
+.gs-hf{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.gs-hp{display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:.85rem;color:var(--tx2);}
+.gs-t{margin-left:auto;background:var(--sur);color:var(--tx);border:1.5px solid var(--bor2);border-radius:var(--rads);padding:8px 10px;font-size:1rem;font-family:inherit;}
 </style>
 </head>
 <body>
@@ -323,6 +348,19 @@ nav button svg{width:21px;height:21px;}
   </div>
 </div>
 
+<!-- MODAL ASISTENCIA: aparece al abrir la app si falta responder -->
+<div class="ovl" id="asisModal">
+  <div class="modal" style="text-align:center">
+    <div class="mhandle"></div>
+    <div style="font-size:2.4rem;margin-bottom:8px">&#x1F3CB;&#xFE0F;</div>
+    <div class="mtit" id="asisTit" style="text-align:center;margin-bottom:8px"></div>
+    <div class="msub" id="asisSub" style="text-align:center;margin-bottom:20px"></div>
+    <button class="mbtn bvoy" onclick="asisResp(true)">&#x2705; Voy</button>
+    <button class="mbtn bno" onclick="asisResp(false)">&#x274C; No voy</button>
+    <button class="mbtn2" onclick="asisPosponer()">Responder m&#xE1;s tarde</button>
+  </div>
+</div>
+
 <div id="app">
   <header>
     <span class="logo"><b>Gym</b>Sunx</span>
@@ -336,6 +374,7 @@ nav button svg{width:21px;height:21px;}
 
     <!-- HOY -->
     <div class="sec on" id="sec-hoy">
+      <div id="asisBanner"></div>
       <div class="hcard" id="hcard">
         <div class="glow"></div>
         <div class="tbadge" id="tbadge"></div>
@@ -387,6 +426,13 @@ nav button svg{width:21px;height:21px;}
       <div class="card"><div class="clbl">Historial</div><div id="shist"></div></div>
     </div>
 
+    <!-- GRUPO -->
+    <div class="sec" id="sec-grupo">
+      <div class="shdr"><div class="slbl">Asistencia</div><div class="sttl">Grupo</div></div>
+      <div id="asisCont"></div>
+      <div id="asisAdmin"></div>
+    </div>
+
     <!-- TEMAS -->
     <div class="sec" id="sec-config">
       <div class="shdr"><div class="slbl">Personalizaci&#xF3;n</div><div class="sttl">Temas</div></div>
@@ -424,6 +470,10 @@ nav button svg{width:21px;height:21px;}
     <button onclick="goSec('progreso',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Progreso
+    </button>
+    <button onclick="goSec('grupo',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Grupo
     </button>
     <button onclick="goSec('config',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="12" r="1.5"/><path d="M3 12h4M11 12h10"/><circle cx="17" cy="6" r="1.5"/><path d="M3 6h12M19 6h2"/><circle cx="7" cy="18" r="1.5"/><path d="M3 18h2M9 18h12"/></svg>
@@ -949,6 +999,7 @@ function goSec(id, btn) {
   if (id==='cuerpo')   renderCuerpo();
   if (id==='progreso') { S.semV=S.sem; renderProgreso(); }
   if (id==='config')   apTema(S.tema);
+  if (id==='grupo')    { renderAdmin(); renderAsis(); }
 }
 
 // ══ AUTO AVANCE SEMANA ══
@@ -964,12 +1015,238 @@ function checkSem() {
 // ══ AVISO PESO — solo después de que la app está lista ══
 function checkPeso() {
   if (!S.pesos || !S.pesos.length || !puedeRegistrar()) return;
-  setTimeout(abrirPeso, 3500);
+  setTimeout(abrirPesoLibre, 3500);
+}
+
+// ══ ASISTENCIA GRUPAL (Supabase, sin login) ══
+// Cómo conectarlo: 1) creá un proyecto gratis en supabase.com  2) corré supabase.sql en el SQL Editor
+// 3) en Project Settings > API copiá la "Project URL" y la clave "anon public" y pegalas acá abajo.
+var SB_URL = '';                  // ej: 'https://abcdxyz.supabase.co'
+var SB_KEY = '';                  // clave anon public
+var ASIS_DESDE = '2026-11-23';    // el historial cuenta desde este lunes
+var ASIS_DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+var DIAS_ENT = [1, 2, 3, 5];      // lunes, martes, miércoles y viernes
+var HOR = {};                     // horarios: {1:'19:00', 2:null, ...}
+var RESP = {};                    // respuestas: {'2026-11-23|nashio': true (voy) / false (no voy)}
+var _asisSes = null, _asisPosp = {}, _asisOk = false, _asisListo = false, _adminListo = false, _asisTimer = null;
+var ETQ = {voy:'Voy', no:'No voy', sin:'Sin responder', auto:'No voy (no respondió)'};
+
+function sbOn() { return !!(SB_URL && SB_KEY); }
+
+// Llamada simple a la API de Supabase (PostgREST)
+function sb(metodo, ruta, cuerpo, prefer) {
+  var h = {apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY};
+  if (cuerpo) h['Content-Type'] = 'application/json';
+  if (prefer) h.Prefer = prefer;
+  return fetch(SB_URL + '/rest/v1/' + ruta, {method: metodo, headers: h, body: cuerpo ? JSON.stringify(cuerpo) : undefined})
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text().then(function(t) { return t ? JSON.parse(t) : null; });
+    });
+}
+
+// Baja horarios y respuestas, y vuelve a dibujar todo. Se repite cada 10 s mientras la app está a la vista.
+function cargarAsis() {
+  if (!sbOn()) return Promise.resolve();
+  return Promise.all([sb('GET', 'horarios?select=*'), sb('GET', 'respuestas?select=*&fecha=gte.' + ASIS_DESDE)])
+    .then(function(r) {
+      HOR = {}; RESP = {};
+      r[0].forEach(function(x) { HOR[x.dia] = x.hora ? x.hora.slice(0, 5) : null; });
+      r[1].forEach(function(x) { RESP[x.fecha + '|' + x.quien] = x.voy; });
+      _asisOk = true;
+    })
+    .catch(function() { _asisOk = false; })
+    .then(function() {
+      _asisListo = true;
+      if (_asisOk && !_adminListo) { _adminListo = true; renderAdmin(); }
+      renderAsis();
+    });
+}
+
+// ── Sesiones (un entrenamiento = una fecha + una hora) ──
+function p2(n) { return (n < 10 ? '0' : '') + n; }
+function mkSes(fecha, hora) {
+  var inicio = new Date(fecha + 'T' + hora + ':00-03:00');          // hora de Buenos Aires
+  return {fecha: fecha, hora: hora, inicio: inicio, cierre: new Date(inicio.getTime() - 3600000)};  // cierra 1 h antes
+}
+function sesiones() {                                                // desde ASIS_DESDE hasta 7 días adelante
+  var out = [], d = new Date(ASIS_DESDE + 'T12:00:00'), fin = new Date();
+  fin.setDate(fin.getDate() + 7);
+  while (d <= fin) {
+    var h = HOR[d.getDay()];
+    if (h) out.push(mkSes(ds(d), h));
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+function faseDe(s) { var n = new Date(); return n < s.cierre ? 'abierta' : (n < s.inicio ? 'cerrada' : 'pasada'); }
+function estadoDe(s, quien) {
+  var v = RESP[s.fecha + '|' + quien];
+  if (v === true) return 'voy';
+  if (v === false) return 'no';
+  return new Date() < s.cierre ? 'sin' : 'auto';                    // sin responder y ya cerró = "No voy" automático
+}
+function cierreTxt(s) { var p = s.hora.split(':'), m = (+p[0]) * 60 + (+p[1]) - 60; return p2(Math.floor(m / 60)) + ':' + p2(m % 60); }
+function falta(ms) { var m = Math.max(0, Math.floor(ms / 60000)), h = Math.floor(m / 60); return h > 0 ? h + ' h ' + (m % 60) + ' min' : m + ' min'; }
+function nomFecha(f) { var d = new Date(f + 'T12:00:00'); return ASIS_DIAS[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth() + 1); }
+
+// Primera sesión abierta que yo todavía no respondí (sinPosp = ignorar las que dije "más tarde")
+function pendiente(sinPosp) {
+  var l = sesiones();
+  for (var i = 0; i < l.length; i++) {
+    var s = l[i];
+    if (faseDe(s) === 'abierta' && typeof RESP[s.fecha + '|' + PID] === 'undefined' && !(sinPosp && _asisPosp[s.fecha])) return s;
+  }
+  return null;
+}
+
+// ── Responder Voy / No voy ──
+function responder(fecha, voy) {
+  var s = null, l = sesiones();
+  for (var i = 0; i < l.length; i++) if (l[i].fecha === fecha) s = l[i];
+  if (!s || faseDe(s) !== 'abierta') { alert('Ya se cerraron las respuestas de ese día.'); renderAsis(); return; }
+  var k = fecha + '|' + PID, antes = RESP[k];
+  RESP[k] = voy;                                                     // se ve al instante
+  renderAsis();
+  sb('POST', 'respuestas?on_conflict=fecha,quien', {fecha: fecha, quien: PID, voy: voy}, 'resolution=merge-duplicates,return=minimal')
+    .catch(function() {
+      if (typeof antes === 'undefined') delete RESP[k]; else RESP[k] = antes;
+      renderAsis();
+      alert('No se pudo guardar tu respuesta. Revisá la conexión y probá de nuevo.');
+    });
+}
+
+// ── Aviso grande al abrir la app ──
+function mostrarAsisModal() {
+  var s = pendiente(true);
+  if (!s) return;
+  _asisSes = s.fecha;
+  document.getElementById('asisTit').textContent = '¿Vas a entrenar el ' + nomFecha(s.fecha).toLowerCase() + '?';
+  document.getElementById('asisSub').textContent = 'Hora: ' + s.hora + ' · Respondé hasta las ' + cierreTxt(s) + ' (te quedan ' + falta(s.cierre - new Date()) + ')';
+  document.getElementById('asisModal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function cerrarAsisModal() {
+  document.getElementById('asisModal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+function asisResp(voy) {
+  var f = _asisSes;
+  cerrarAsisModal();
+  if (f) responder(f, voy);
+  setTimeout(mostrarAsisModal, 500);                                 // si queda otro día sin responder, lo pregunta
+}
+function asisPosponer() {
+  if (_asisSes) _asisPosp[_asisSes] = true;
+  cerrarAsisModal();
+  renderAsis();
+  setTimeout(mostrarAsisModal, 300);
+}
+function abrirPesoLibre() {                                          // el cartel del peso espera a que se responda la asistencia
+  if (document.getElementById('asisModal').classList.contains('on')) { setTimeout(abrirPesoLibre, 1500); return; }
+  abrirPeso();
+}
+
+// ── Dibujo ──
+function renderBanner() {                                            // cartel fijo arriba de "Hoy" mientras falte responder
+  var el = document.getElementById('asisBanner');
+  if (!el) return;
+  var s = (_asisListo && sbOn()) ? pendiente(false) : null;
+  if (!s) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="card abn"><div class="abn-t">🏋️ ¿Vas el ' + nomFecha(s.fecha).toLowerCase() + ' a las ' + s.hora + '?</div>' +
+    '<div class="abn-s">Respondé antes de las ' + cierreTxt(s) + ' · cierra en ' + falta(s.cierre - new Date()) + '</div>' +
+    '<div class="abtns"><button class="bvoy" onclick="responder(\'' + s.fecha + '\',true)">✅ Voy</button>' +
+    '<button class="bno" onclick="responder(\'' + s.fecha + '\',false)">❌ No voy</button></div></div>';
+}
+
+function tarjetaSes(s) {
+  var f = faseDe(s), ahora = new Date();
+  var badge = f === 'abierta'
+    ? '<span class="gs-badge abierta">🟢 Abierto · cierra en ' + falta(s.cierre - ahora) + ' (' + cierreTxt(s) + ')</span>'
+    : '<span class="gs-badge cerrada">🔒 Cerrado</span>';
+  var filas = '';
+  for (var id in PERFILES) {
+    var e = estadoDe(s, id);
+    filas += '<div class="gs-p"><span class="gs-d ' + e + '"></span><b>' + PERFILES[id].nombre + '</b>' + (id === PID ? '&nbsp;(vos)' : '') + '<span class="gs-e">' + ETQ[e] + '</span></div>';
+  }
+  var mio = RESP[s.fecha + '|' + PID];
+  var btns = f !== 'abierta' ? '' :
+    '<div class="abtns" style="margin-top:12px"><button class="bvoy' + (mio === false ? ' off' : '') + '" onclick="responder(\'' + s.fecha + '\',true)">✅ Voy</button>' +
+    '<button class="bno' + (mio === true ? ' off' : '') + '" onclick="responder(\'' + s.fecha + '\',false)">❌ No voy</button></div>';
+  return '<div class="card"><div class="gs-top"><div class="gs-dia">' + nomFecha(s.fecha) + '</div><div class="gs-hora">' + s.hora + '</div></div>' + badge + filas + btns + '</div>';
+}
+
+function historialHtml(pas) {
+  if (!pas.length) return '<div class="card"><div class="clbl">Historial</div><div class="gs-e" style="text-align:left">Todavía no hay entrenamientos pasados.</div></div>';
+  var tot = {}, lista = '', id;
+  for (id in PERFILES) tot[id] = {voy:0, no:0, auto:0};
+  for (var i = pas.length - 1; i >= 0; i--) {                        // del más reciente al más viejo
+    var s = pas[i], fila = '';
+    for (id in PERFILES) {
+      var e = estadoDe(s, id);
+      tot[id][e]++;
+      fila += '<span class="gs-hp"><span class="gs-d ' + e + '"></span>' + PERFILES[id].nombre + '</span>';
+    }
+    if (i >= pas.length - 20) lista += '<div class="gs-h"><div class="gs-hf">' + nomFecha(s.fecha) + ' · ' + s.hora + '</div>' + fila + '</div>';
+  }
+  var res = '';
+  for (id in PERFILES) {
+    var t = tot[id], pct = Math.round(t.voy / pas.length * 100);
+    res += '<div class="gs-p"><b>' + PERFILES[id].nombre + '</b><span class="gs-e">' + pct + '% · fue ' + t.voy + ' · avisó que no ' + t.no + ' · no respondió ' + t.auto + '</span></div>';
+  }
+  return '<div class="card"><div class="clbl">Constancia</div>' + res + '</div><div class="card"><div class="clbl">Historial</div>' + lista + '</div>';
+}
+
+function renderAsis() {
+  renderBanner();
+  var el = document.getElementById('asisCont');
+  if (!el) return;
+  if (!sbOn()) { el.innerHTML = '<div class="card">Falta conectar Supabase. Los pasos están en el código, en la sección "ASISTENCIA GRUPAL".</div>'; return; }
+  if (!_asisListo) { el.innerHTML = '<div class="card">Cargando…</div>'; return; }
+  var html = _asisOk ? '' : '<div class="card" style="color:var(--err)">Sin conexión: se muestra lo último que se pudo cargar.</div>';
+  var l = sesiones(), prox = [], pas = [];
+  for (var i = 0; i < l.length; i++) (faseDe(l[i]) === 'pasada' ? pas : prox).push(l[i]);
+  if (!prox.length) html += '<div class="card">No hay entrenamientos próximos. Agus tiene que fijar los horarios.</div>';
+  for (var j = 0; j < prox.length; j++) html += tarjetaSes(prox[j]);
+  el.innerHTML = html + historialHtml(pas);
+}
+
+// ── Panel de horarios (solo se muestra en el perfil de Agus) ──
+function renderAdmin() {
+  var el = document.getElementById('asisAdmin');
+  if (!el) return;
+  if (!sbOn() || PID !== 'agusunx') { el.innerHTML = ''; return; }
+  var h = '<div class="card"><div class="clbl">Horarios (solo Agus)</div>';
+  for (var i = 0; i < DIAS_ENT.length; i++) {
+    var d = DIAS_ENT[i];
+    h += '<div class="gs-p"><b>' + ASIS_DIAS[d] + '</b><input type="time" class="gs-t" id="hor' + d + '" value="' + (HOR[d] || '') + '"></div>';
+  }
+  h += '<div class="gs-e" style="text-align:left;margin:6px 0 12px">Un día sin hora = no hay entrenamiento. Las respuestas cierran 1 hora antes.</div>' +
+    '<button class="mbtn" onclick="guardarHorarios()">Guardar horarios</button></div>';
+  el.innerHTML = h;
+}
+function guardarHorarios() {
+  var pend = DIAS_ENT.map(function(d) {
+    return sb('PATCH', 'horarios?dia=eq.' + d, {hora: document.getElementById('hor' + d).value || null}, 'return=minimal');
+  });
+  Promise.all(pend)
+    .then(function() { alert('Horarios guardados.'); return cargarAsis(); })
+    .catch(function() { alert('No se pudieron guardar los horarios. Revisá la conexión.'); });
+}
+
+function iniciarAsis() {
+  renderAsis();
+  if (!sbOn()) return;
+  cargarAsis().then(function() { setTimeout(mostrarAsisModal, 300); });
+  if (!_asisTimer) {
+    _asisTimer = setInterval(function() { if (!document.hidden) cargarAsis(); }, 10000);
+    document.addEventListener('visibilitychange', function() { if (!document.hidden) cargarAsis(); });
+  }
 }
 
 // ══ PERFIL / INIT ══
 // días ya entrenados antes de instalar la app, por perfil (se marcan completos una sola vez)
-var BACKFILL = {agusunx:['2026-11-02','2026-11-03','2026-11-04','2026-11-06'], nashio:['2026-11-02','2026-11-03','2026-11-06'], elende:['2026-11-02','2026-11-03','2026-11-04','2026-11-06']};
+var BACKFILL = {agusunx:['2026-11-02','2026-11-03','2026-11-04','2026-11-06','2026-11-09','2026-11-10','2026-11-11','2026-11-13','2026-11-16','2026-11-17','2026-11-18'], nashio:['2026-11-02','2026-11-03','2026-11-06'], elende:['2026-11-02','2026-11-03','2026-11-04','2026-11-06']};
 function aplicarBackfill() {
   if (!S.bf) S.bf = {};
   var L = BACKFILL[PID] || [];
@@ -999,6 +1276,7 @@ function boot(id) {
   document.querySelector('.logo').innerHTML = '<b>Gym</b>Sunx <span style="font-size:1.1rem">' + P.icono + '</span>';
   checkSem();
   renderHoy();
+  iniciarAsis();
 }
 
 function mostrarPerfiles() {
