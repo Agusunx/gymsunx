@@ -1021,8 +1021,8 @@ function checkPeso() {
 // ══ ASISTENCIA GRUPAL (Supabase, sin login) ══
 // Cómo conectarlo: 1) creá un proyecto gratis en supabase.com  2) corré supabase.sql en el SQL Editor
 // 3) en Project Settings > API copiá la "Project URL" y la clave "anon public" y pegalas acá abajo.
-var SB_URL = '';                  // ej: 'https://abcdxyz.supabase.co'
-var SB_KEY = '';                  // clave anon public
+var SB_URL = 'https://xxltphltufjlxwvenyoc.supabase.co';
+var SB_KEY = 'sb_publishable_IKXVKKFhuQdkibVnxPOkew_n5hZeRDU';   // clave pública (publishable)
 var ASIS_DESDE = '2026-11-23';    // el historial cuenta desde este lunes
 var ASIS_DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 var DIAS_ENT = [1, 2, 3, 5];      // lunes, martes, miércoles y viernes
@@ -1035,7 +1035,8 @@ function sbOn() { return !!(SB_URL && SB_KEY); }
 
 // Llamada simple a la API de Supabase (PostgREST)
 function sb(metodo, ruta, cuerpo, prefer) {
-  var h = {apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY};
+  var h = {apikey: SB_KEY};
+  if (SB_KEY.indexOf('eyJ') === 0) h.Authorization = 'Bearer ' + SB_KEY;   // la clave anon vieja es un JWT; la "publishable" nueva va solo en apikey
   if (cuerpo) h['Content-Type'] = 'application/json';
   if (prefer) h.Prefer = prefer;
   return fetch(SB_URL + '/rest/v1/' + ruta, {method: metodo, headers: h, body: cuerpo ? JSON.stringify(cuerpo) : undefined})
