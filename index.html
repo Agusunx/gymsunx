@@ -326,6 +326,15 @@ nav button svg{width:21px;height:21px;}
 .gs-hf{font-weight:700;font-size:.9rem;margin-bottom:4px;}
 .gs-hp{display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:.85rem;color:var(--tx2);}
 .gs-t{margin-left:auto;background:var(--sur);color:var(--tx);border:1.5px solid var(--bor2);border-radius:var(--rads);padding:8px 10px;font-size:1rem;font-family:inherit;}
+.frs{border-left:4px solid var(--ac);}
+.frs-t{font-size:1.1rem;line-height:1.5;font-style:italic;}
+#finModal{position:fixed;inset:0;z-index:8500;display:none;align-items:center;justify-content:center;padding:28px;overflow-y:auto;background:radial-gradient(circle at 50% 30%,var(--sur),var(--bg)),var(--bg);}
+#finModal.on{display:flex;}
+.fin-in{max-width:520px;width:100%;text-align:center;}
+.fin-ic{font-size:4rem;}
+.fin-t{font-size:.85rem;letter-spacing:2px;text-transform:uppercase;color:var(--ac);font-weight:800;margin:8px 0 18px;}
+.fin-f{font-size:1.6rem;line-height:1.4;font-weight:700;margin-bottom:30px;}
+#finModal .mbtn{max-width:320px;margin:0 auto;}
 </style>
 </head>
 <body>
@@ -361,6 +370,16 @@ nav button svg{width:21px;height:21px;}
   </div>
 </div>
 
+<!-- PANTALLA FINAL: frase de entrenamiento terminado -->
+<div id="finModal">
+  <div class="fin-in">
+    <div class="fin-ic">&#x1F3C6;</div>
+    <div class="fin-t">&#xA1;Entrenamiento completado!</div>
+    <div class="fin-f" id="finTxt"></div>
+    <button class="mbtn" onclick="cerrarFin()">Cerrar</button>
+  </div>
+</div>
+
 <div id="app">
   <header>
     <span class="logo"><b>Gym</b>Sunx</span>
@@ -375,6 +394,7 @@ nav button svg{width:21px;height:21px;}
     <!-- HOY -->
     <div class="sec on" id="sec-hoy">
       <div id="asisBanner"></div>
+      <div id="fraseDia"></div>
       <div class="hcard" id="hcard">
         <div class="glow"></div>
         <div class="tbadge" id="tbadge"></div>
@@ -758,6 +778,7 @@ function checkAllDone() {
   if (st.total && st.done === st.total) {
     lanzarConfetti();
     try { if (navigator.vibrate) navigator.vibrate([30,20,30,20,60]); } catch(e) {}
+    mostrarFin();
   }
 }
 
@@ -1018,6 +1039,133 @@ function checkPeso() {
   setTimeout(abrirPesoLibre, 3500);
 }
 
+// ══ FRASES PERSONALIZADAS ══  b = bienvenida (una por día), f = entrenamiento terminado
+var FRASES = {
+  agusunx: {
+    b: [
+      "Buen día, Agusunx. ¿Te despertaste solo o tuvieron que hacerte RCP con tres alarmas?",
+      "La mañana te manda saludos. Dice que no te conoce porque nunca te ve.",
+      "Bienvenido. Tu cama acaba de publicar una búsqueda laboral: necesita reemplazante.",
+      "Son las 10 de la mañana. Para vos esto cuenta como entrenamiento de alto rendimiento.",
+      "¿Hoy vas al gimnasio o vas a seguir desarrollando masa muscular horizontal?",
+      "El despertador ya no suena. Directamente te tiene bloqueado.",
+      "Tu colchón tiene más horas compartidas con vos que tus compañeros de gimnasio.",
+      "Arriba, campeón. No podés ponerle excusas a la vida y después preguntarte por qué no avanza.",
+      "Último momento: un hombre de 28 años descubre que existe la mañana.",
+      "Bienvenido, Agusunx. La productividad está preocupada por tu paradero."
+    ],
+    f: [
+      "¡Terminaste! Increíble. Hoy hiciste algo más que cambiar de posición en la cama.",
+      "El músculo crece descansando. En tu caso tenemos que vigilar que no se confunda con hibernación.",
+      "Hoy entrenaste el cuerpo. Mañana intentemos entrenar el horario.",
+      "Felicitaciones. Ya podés volver a dormir con la tranquilidad de que hoy no fuiste un mueble.",
+      "Una rutina más completada. Tu cama acaba de perder la custodia.",
+      "El progreso es evidente: cada vez necesitás menos intervención externa para levantarte.",
+      "Hoy ganaste vos. La almohada está preparando la revancha.",
+      "No sabemos qué creció más: tus músculos o tu capacidad de levantarte de la cama."
+    ]
+  },
+  nashio: {
+    b: [
+      "Buen día, Nashio. ¿Hoy trabajás en PedidosYa o en la sucursal del kiosco?",
+      "Tu bicicleta tiene un freno menos, pero vos tenés más excusas que cambios.",
+      "Se busca a Nashio. Última ubicación conocida: sentado tomando una birra mientras supuestamente repartía.",
+      "¿Cómo está ese hígado? ¿Ya sabe que hoy tiene que compartir protagonismo con los músculos?",
+      "Recordatorio: el agua no es un mito urbano. Existe y se puede tomar.",
+      "Hoy hace frío, calor, llueve o hay viento. Sabemos que alguna de estas cuatro cosas te va a impedir venir.",
+      "PedidosYa informa que tenés 47 pedidos pendientes. El kiosquero informa que tenés 3 cervezas fiadas.",
+      "Tus bíceps están tan abandonados que ya están buscando otro dueño.",
+      "¿Dormiste ocho horas o hiciste una guardia nocturna en el sindicato de los birreros?",
+      "Bienvenido, Nashio. Hoy vamos a intentar que tus brazos sirvan para algo más que sostener una botella.",
+      "La bicicleta pide un freno nuevo. Nosotros pedimos que aparezcas.",
+      "Tu rutina tiene menos continuidad que tu jornada laboral."
+    ],
+    f: [
+      "¡Terminaste! Ahora podés ir al kiosco a contar que hoy hiciste ejercicio de verdad.",
+      "Tus brazos acaban de descubrir que existen otras actividades además de levantar vasos.",
+      "¡Milagro! Nashio completó una rutina sin que intervenga el servicio meteorológico.",
+      "Hoy tomaste más decisiones buenas que agua durante toda la semana.",
+      "Los bíceps agradecen este pequeño aporte a su existencia.",
+      "Entrenamiento completado. La cerveza no cuenta como recuperación muscular, por si pensabas preguntar.",
+      "Hoy repartiste repeticiones. Por primera vez en mucho tiempo, un reparto llegó a destino.",
+      "¡Felicitaciones! El gimnasio te vio más veces esta semana que tus clientes de PedidosYa.",
+      "No sabemos qué es más difícil: que vengas al gimnasio o que tu bicicleta frene.",
+      "Hoy tus músculos trabajaron. El kiosquero tendrá que conseguir otro cliente para financiar su negocio.",
+      "Una rutina completada. Seguimos esperando que completes la misión secundaria: tomar agua.",
+      "¡Victoria histórica! Nashio hizo ejercicio y no necesitó que lo llevaran en moto."
+    ]
+  },
+  elende: {
+    b: [
+      "Buen día, Davini. ¿Hoy vas a entrenar o tenés que atender otra emergencia de cucuruchos?",
+      "Cipriano no te da bola, Grido te explota y GTA te roba el tiempo. Hermano, estás jugando en dificultad extrema.",
+      "Vegeta entrenaba 8 horas. Vos necesitás que te rueguen para hacer 8 repeticiones.",
+      "Tu personaje de GTA tiene una vida más organizada que la tuya.",
+      "Se informa que Cipriano continúa sin mostrar interés. Recomendamos invertir esos puntos de habilidad en otra cosa.",
+      "Grido te llama antes de tu turno y vos atendés. Te llama el gimnasio y te hacés el muerto.",
+      "¿Otra partida de GTA? Tu metabolismo acaba de cerrar sesión.",
+      "Bienvenido, titán. Recordá que no sos un NPC: tenés que moverte.",
+      "Tu celular tiene más actividad física que vos, de tanto que lo levantás durante las series.",
+      "Cipriano es una misión que no tiene recompensa. Te recomendamos cambiar de juego.",
+      "Hoy no hay excusas. Bueno, salvo que Grido te haya contratado como rehén.",
+      "Tu mayor transformación hasta ahora fue pasar de GTA V a GTA VI."
+    ],
+    f: [
+      "¡Misión completada! +500 XP. -0 mensajes de Cipriano. Seguimos trabajando.",
+      "Hoy levantaste pesas. El celular está celoso porque por fin alguien más recibió atención.",
+      "¡Felicitaciones! Quemaste calorías en lugar de horas de pantalla. Un acontecimiento histórico.",
+      "Ni los turnos sorpresa de Grido ni las misiones de GTA pudieron salvarte de esta rutina.",
+      "Vegeta estaría orgulloso. Goku estaría sorprendido de que hayas dejado el celular.",
+      "Hoy tuviste más repeticiones que respuestas de Cipriano.",
+      "¡Transformación desbloqueada! Ahora solamente falta que el personaje salga de la silla.",
+      "Entrenamiento completado. Ya podés volver a tu cueva gamer.",
+      "Hoy derrotaste al jefe final: las ganas de quedarse jugando.",
+      "Tu cuerpo está progresando. Tu historial de juego sigue siendo una causa perdida.",
+      "¡Victoria! Hoy no te explotó Grido, no te ignoró el gimnasio y no te ganó el joystick.",
+      "Una rutina más. A este ritmo vas a conseguir más logros acá que en Steam."
+    ]
+  }
+};
+
+// Saca una frase al azar que todavía no salió. Recién cuando salieron todas arranca otra vuelta (sin repetir la última).
+function sacarFrase(tipo) {
+  var lista = FRASES[PID][tipo], libres = [], i;
+  if (!S.fr) S.fr = {};
+  var usadas = S.fr[tipo] || [];
+  for (i = 0; i < lista.length; i++) if (usadas.indexOf(i) < 0) libres.push(i);
+  if (!libres.length) {
+    var ult = usadas[usadas.length - 1];
+    usadas = [];
+    for (i = 0; i < lista.length; i++) if (i !== ult) libres.push(i);
+  }
+  var n = libres[Math.floor(Math.random() * libres.length)];
+  usadas.push(n);
+  S.fr[tipo] = usadas;
+  save();
+  return lista[n];
+}
+
+// Bienvenida: una por día, queda fija en "Hoy" mientras entrenan
+function renderFrase() {
+  var el = document.getElementById('fraseDia'), hoy = ds(new Date());
+  if (!el) return;
+  if (!S.frDia || S.frDia.f !== hoy) { S.frDia = {f: hoy, t: sacarFrase('b')}; save(); }
+  el.innerHTML = '<div class="card frs"><div class="clbl">💬 Para hoy</div><div class="frs-t">' + S.frDia.t + '</div></div>';
+}
+
+// Entrenamiento terminado: pantalla completa hasta que toquen "Cerrar"
+function mostrarFin() {
+  var hoy = ds(new Date());
+  if (!S.finDia || S.finDia.f !== hoy) { S.finDia = {f: hoy, t: sacarFrase('f')}; save(); }
+  document.getElementById('finTxt').textContent = S.finDia.t;
+  document.getElementById('finModal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function cerrarFin() {
+  document.getElementById('finModal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
 // ══ ASISTENCIA GRUPAL (Supabase, sin login) ══
 // Cómo conectarlo: 1) creá un proyecto gratis en supabase.com  2) corré supabase.sql en el SQL Editor
 // 3) en Project Settings > API copiá la "Project URL" y la clave "anon public" y pegalas acá abajo.
@@ -1067,8 +1215,11 @@ function cargarAsis() {
 // ── Sesiones (un entrenamiento = una fecha + una hora) ──
 function p2(n) { return (n < 10 ? '0' : '') + n; }
 function mkSes(fecha, hora) {
-  var inicio = new Date(fecha + 'T' + hora + ':00-03:00');          // hora de Buenos Aires
-  return {fecha: fecha, hora: hora, inicio: inicio, cierre: new Date(inicio.getTime() - 3600000)};  // cierra 1 h antes
+  var inicio = new Date(fecha + 'T' + hora + ':00-03:00');                  // hora de Buenos Aires
+  var cierre = new Date(inicio.getTime() - 3600000);                        // cierra 1 h antes
+  // Se responde el MISMO día: desde las 9:00 hasta el cierre (si el cierre cae antes de las 9, desde las 00:00).
+  var abre = new Date(fecha + 'T09:00:00-03:00') < cierre ? '09:00' : '00:00';
+  return {fecha: fecha, hora: hora, inicio: inicio, cierre: cierre, abre: abre, apertura: new Date(fecha + 'T' + abre + ':00-03:00')};
 }
 function sesiones() {                                                // desde ASIS_DESDE hasta 7 días adelante
   var out = [], d = new Date(ASIS_DESDE + 'T12:00:00'), fin = new Date();
@@ -1080,7 +1231,10 @@ function sesiones() {                                                // desde AS
   }
   return out;
 }
-function faseDe(s) { var n = new Date(); return n < s.cierre ? 'abierta' : (n < s.inicio ? 'cerrada' : 'pasada'); }
+function faseDe(s) {
+  var n = new Date();
+  return n < s.apertura ? 'espera' : (n < s.cierre ? 'abierta' : (n < s.inicio ? 'cerrada' : 'pasada'));
+}
 function estadoDe(s, quien) {
   var v = RESP[s.fecha + '|' + quien];
   if (v === true) return 'voy';
@@ -1162,6 +1316,7 @@ function renderBanner() {                                            // cartel f
 
 function tarjetaSes(s) {
   var f = faseDe(s), ahora = new Date();
+  if (f === 'espera') return '<div class="card"><div class="gs-top"><div class="gs-dia">' + nomFecha(s.fecha) + '</div><div class="gs-hora">' + s.hora + '</div></div><div class="gs-e" style="text-align:left">Se abre ese día a las ' + s.abre + ' para responder.</div></div>';
   var badge = f === 'abierta'
     ? '<span class="gs-badge abierta">🟢 Abierto · cierra en ' + falta(s.cierre - ahora) + ' (' + cierreTxt(s) + ')</span>'
     : '<span class="gs-badge cerrada">🔒 Cerrado</span>';
@@ -1207,7 +1362,7 @@ function renderAsis() {
   var html = _asisOk ? '' : '<div class="card" style="color:var(--err)">Sin conexión: se muestra lo último que se pudo cargar.</div>';
   var l = sesiones(), prox = [], pas = [];
   for (var i = 0; i < l.length; i++) (faseDe(l[i]) === 'pasada' ? pas : prox).push(l[i]);
-  if (!prox.length) html += '<div class="card">No hay entrenamientos próximos.</div>';
+  if (!prox.length) html += '<div class="card">No hay entrenamientos próximos. Agus tiene que fijar los horarios.</div>';
   for (var j = 0; j < prox.length; j++) html += tarjetaSes(prox[j]);
   el.innerHTML = html + historialHtml(pas);
 }
@@ -1277,6 +1432,7 @@ function boot(id) {
   document.querySelector('.logo').innerHTML = '<b>Gym</b>Sunx <span style="font-size:1.1rem">' + P.icono + '</span>';
   checkSem();
   renderHoy();
+  renderFrase();
   iniciarAsis();
 }
 
